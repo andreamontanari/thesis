@@ -1,26 +1,40 @@
 package com.andreamontanari.mythesis;
 
-import android.content.Intent;
+import android.app.Notification;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
 
-import java.io.Console;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 /**
  * Created by andreamontanari on 09/02/15.
  */
-public class ChooseActivity  extends ActionBarActivity {
+public class FirstActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_choose);
+        setContentView(R.layout.activity_first);
+
+        MapFragment mapFragment = (MapFragment) getFragmentManager()
+                .findFragmentById(R.id.map);
+
+        final GoogleMap map = mapFragment.getMap();
+        map.setMyLocationEnabled(true);
+
+        LatLng latLng = new LatLng(46.079816, 13.231234);
+
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,map. getMaxZoomLevel()-5));
+
+
     }
 
 
@@ -46,19 +60,10 @@ public class ChooseActivity  extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void startDemo(View v) {
-        Button b = (Button)v;
-        String buttonText = b.getText().toString();
-        if (buttonText.equals("Demo1")) {
-            Intent i = new Intent(this, FirstActivity.class);
-            startActivity(i);
-        } else if (buttonText.equals("Demo2")) {
-            Intent i = new Intent(this, SecondActivity.class);
-            startActivity(i);
-        } else if (buttonText.equals("Demo3")) {
-            Intent i = new Intent(this, ThirdActivity.class);
-            startActivity(i);
-        }
+    public void onMapReady(GoogleMap map) {
+        map.addMarker(new MarkerOptions()
+                .position(new LatLng(0, 0))
+                .title("Marker"));
     }
-
 }
+

@@ -24,7 +24,6 @@
         android:src="@drawable/android"
         android:scaleY="0.75"
         android:scaleX="0.75"
-        android:clickable="true"
         android:onClick="begin"
         android:layout_above="@+id/textView2"
         android:layout_alignParentLeft="true"
@@ -39,7 +38,6 @@
         android:textStyle="bold"
         android:textColor="#0000ff"
         android:id="@+id/textView2"
-        android:clickable="true"
         android:onClick="begin"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
