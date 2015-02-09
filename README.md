@@ -1,7 +1,7 @@
-# thesis
+# Andrea Montanari - Bachelor research thesis in Computer Science (University of Udine)
 This is my personal bachelor thesis space.
 <br>
-I am working on an experimental thesis based on mobile maps (Android) and icon placement.
+I am working on a research thesis based on mobile maps (Android) and icon placement.
 <br>
 <br>
 You can find 2 main folders: <b>PersonalSolution</b> and <b>MyThesis</b>
