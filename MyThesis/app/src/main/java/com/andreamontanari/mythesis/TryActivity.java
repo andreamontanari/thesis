@@ -200,7 +200,7 @@ public class TryActivity extends FragmentActivity {
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                     new LatLng(latitude,longitude), 18));
 
-            Bitmap bitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.bank);
+            Bitmap bitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.me);
 
             Bitmap fin = addWhiteBorder(bitmap);
             fin = addGreenBorder(fin);
