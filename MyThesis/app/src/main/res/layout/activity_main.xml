@@ -20,16 +20,6 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/imageView2"
-        android:src="@drawable/uniud"
-        android:layout_below="@id/imageView"
-        android:layout_above="@id/textView2"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/imageView"
         android:src="@drawable/android"
         android:scaleY="0.75"
