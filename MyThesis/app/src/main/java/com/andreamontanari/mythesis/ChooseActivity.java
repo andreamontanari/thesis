@@ -23,6 +23,12 @@ public class ChooseActivity  extends ActionBarActivity {
         setContentView(R.layout.activity_choose);
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        setContentView(R.layout.activity_choose);
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -52,12 +58,16 @@ public class ChooseActivity  extends ActionBarActivity {
         if (buttonText.equals("Demo1")) {
             Intent i = new Intent(this, FirstActivity.class);
             startActivity(i);
+            //b.setBackground(getResources().getDrawable(R.drawable.buttonshape1));
         } else if (buttonText.equals("Demo2")) {
             Intent i = new Intent(this, SecondActivity.class);
             startActivity(i);
+            //b.setBackground(getResources().getDrawable(R.drawable.buttonshape2));
         } else if (buttonText.equals("Demo3")) {
+           // b.setBackground(getResources().getDrawable(R.drawable.buttonshape3pressed));
             Intent i = new Intent(this, ThirdActivity.class);
             startActivity(i);
+           // b.setBackground(getResources().getDrawable(R.drawable.buttonshape3));
         }
     }
 
