@@ -84,12 +84,12 @@ public class FirstActivity extends ActionBarActivity {
         /********************************************
         *Invio coordinate correnti al Server
         *********************************************/
-        new InsertAsyncTask().execute("http://alwaysdreambig.altervista.org/insert.php");
+        //new InsertAsyncTask().execute("http://alwaysdreambig.altervista.org/insert.php");
 
         /********************************************
          *Richiedo icone da inserire al Server
          *********************************************/
-        new HttpAsyncTask().execute("http://alwaysdreambig.altervista.org/request.php");
+        new HttpAsyncTask().execute("http://alwaysdreambig.altervista.org/ubi/request.php");
 
         /*****************************************
          *Inserisco posizioni scaricate dal server
@@ -158,6 +158,23 @@ public class FirstActivity extends ActionBarActivity {
 
                 for (int i = 0; i < jsonArray.length(); i++) {
                     jsonObject = jsonArray.getJSONObject(i);
+
+                        String id = jsonObject.getString("id");
+                        String name = jsonObject.getString("name");
+                        String surname = jsonObject.getString("surname");
+                        String lat = jsonObject.getString("lat");
+                        String lng = jsonObject.getString("lng");
+                        String email = jsonObject.getString("mail");
+                        String lastpost = jsonObject.getString("lastpost");
+                        String picture = jsonObject.getString("picture");
+
+                        Log.d("id", id);
+                        Log.d("nome", name);
+                        Log.d("cognome", surname);
+                        Log.d( "lat, long:", lat + "  " + lng);
+                        Log.d("mail", email);
+                        Log.d("lastpost", lastpost);
+                        Log.d("picture", picture);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
