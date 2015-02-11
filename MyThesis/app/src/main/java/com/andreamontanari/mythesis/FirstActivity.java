@@ -48,6 +48,9 @@ public class FirstActivity extends ActionBarActivity {
     String result = null;
     String line = null;
     int code;
+    LatLng latlng;
+    private Marker myMarker;
+    private GoogleMap map;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +60,7 @@ public class FirstActivity extends ActionBarActivity {
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
 
-        final GoogleMap map = mapFragment.getMap();
+        map = mapFragment.getMap();
         map.setMyLocationEnabled(true);
 
         /*********************************
@@ -89,7 +92,7 @@ public class FirstActivity extends ActionBarActivity {
         /********************************************
          *Richiedo icone da inserire al Server
          *********************************************/
-        new HttpAsyncTask().execute("http://alwaysdreambig.altervista.org/ubi/request.php");
+        new HttpAsyncTask().execute("http://alwaysdreambig.altervista.org/thesis/request.php");
 
         /*****************************************
          *Inserisco posizioni scaricate dal server
@@ -159,22 +162,36 @@ public class FirstActivity extends ActionBarActivity {
                 for (int i = 0; i < jsonArray.length(); i++) {
                     jsonObject = jsonArray.getJSONObject(i);
 
-                        String id = jsonObject.getString("id");
-                        String name = jsonObject.getString("name");
-                        String surname = jsonObject.getString("surname");
-                        String lat = jsonObject.getString("lat");
-                        String lng = jsonObject.getString("lng");
-                        String email = jsonObject.getString("mail");
-                        String lastpost = jsonObject.getString("lastpost");
-                        String picture = jsonObject.getString("picture");
+                        String id = jsonObject.getString("ID");
+                        String name = jsonObject.getString("Nome");
+                        String surname = jsonObject.getString("Cognome");
+                        String lat = jsonObject.getString("Latitudine");
+                        String lng = jsonObject.getString("Longitudine");
+                        String email = jsonObject.getString("Email");
+                        String immagine = jsonObject.getString("Immagine");
+                        String amici = jsonObject.getString("Amici");
 
                         Log.d("id", id);
                         Log.d("nome", name);
                         Log.d("cognome", surname);
                         Log.d( "lat, long:", lat + "  " + lng);
                         Log.d("mail", email);
-                        Log.d("lastpost", lastpost);
-                        Log.d("picture", picture);
+                        Log.d("picture", immagine);
+                        Log.d("picture", amici);
+
+                    Double la = 46.079816;
+                    Double lni = 13.231234;
+
+
+                    Double lt = Double.parseDouble(lat);
+                    Double ln = Double.parseDouble(lng);
+                    latlng = new LatLng(lt, ln);
+
+                    myMarker = map.addMarker(new MarkerOptions()
+                            .position(latlng)
+                            .title(name+" "+surname)
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.library)));
+
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -184,86 +201,6 @@ public class FirstActivity extends ActionBarActivity {
 
         }
     }
-
-    //invia coordinate correnti al server
-    public class InsertAsyncTask extends AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(String... urls) {
-
-            return INSERT(urls[0]);
-        }
-    }
-
-    public String INSERT(String url) {
-        /*
-        name = edname.getText().toString();
-        surname = edsurname.getText().toString();
-        mail = edmail.getText().toString();
-        lastpost = edlastpost.getText().toString();
-        lat = edlat.getText().toString();
-        lng = edlng.getText().toString();
-        id = edid.getText().toString();
-
-        ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-        nameValuePairs.add(new BasicNameValuePair("name", name));
-        nameValuePairs.add(new BasicNameValuePair("surname", surname));
-        nameValuePairs.add(new BasicNameValuePair("mail", mail));
-        nameValuePairs.add(new BasicNameValuePair("lastpost", lastpost));
-        nameValuePairs.add(new BasicNameValuePair("lat", lat));
-        nameValuePairs.add(new BasicNameValuePair("long", lng));
-        nameValuePairs.add(new BasicNameValuePair("id", id));
-       */
-        ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-
-        try {
-            HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httppost = new HttpPost(url);
-            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-            HttpResponse response = httpclient.execute(httppost);
-            HttpEntity entity = response.getEntity();
-            is = entity.getContent();
-            Log.e("pass 1", "connection success ");
-        } catch (Exception e) {
-            Log.e("Fail 1", e.toString());
-            Toast.makeText(getApplicationContext(), "Invalid Host Address",
-                    Toast.LENGTH_LONG).show();
-        }
-        try {
-            BufferedReader reader = new BufferedReader
-                    (new InputStreamReader(is, "iso-8859-1"), 8);
-            StringBuilder sb = new StringBuilder();
-            while ((line = reader.readLine()) != null) {
-                sb.append(line + "\n");
-            }
-            is.close();
-            result = sb.toString();
-            Log.e("pass 2", "connection success ");
-        } catch (Exception e) {
-            Log.e("Fail 2", e.toString());
-        }
-
-        try {
-
-            JSONObject json_data = new JSONObject(result);
-            code = (json_data.getInt("code"));
-
-            if (code == 1) {
-                //Toast.makeText(getBaseContext(), "Inserted Successfully",
-                //Toast.LENGTH_SHORT).show();
-                Log.d("PROVA", "inserted");
-            } else {
-                //Toast.makeText(getBaseContext(), "Sorry, Try Again",
-                //  Toast.LENGTH_LONG).show();
-                Log.d("PROVA", "not inserted, try again");
-            }
-        } catch (Exception e) {
-            Log.e("Fail 3", e.toString());
-        }
-        return "Okay";
-    }
-
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

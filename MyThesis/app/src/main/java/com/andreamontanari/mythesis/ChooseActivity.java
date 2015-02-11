@@ -56,7 +56,7 @@ public class ChooseActivity  extends ActionBarActivity {
         Button b = (Button)v;
         String buttonText = b.getText().toString();
         if (buttonText.equals("Demo1")) {
-            Intent i = new Intent(this, TryActivity.class);
+            Intent i = new Intent(this, FirstActivity.class);
             startActivity(i);
             //b.setBackground(getResources().getDrawable(R.drawable.buttonshape1));
         } else if (buttonText.equals("Demo2")) {

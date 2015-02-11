@@ -8,6 +8,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.parse.Parse;
+import com.parse.ParseObject;
+
 
 public class MainActivity extends ActionBarActivity {
 
@@ -15,6 +18,33 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+
+        /*
+        // Enable Local Datastore.
+        Parse.enableLocalDatastore(this);
+
+        Parse.initialize(this, "NEmJNLg1Y5x6FEUfJiDOwVXEaSrOMPbew2jALpZ9", "iOetfxLpSERC1fDCqX6Uwgvw2Ps11ufpl2TYXaei");
+
+        ParseObject tesi = new ParseObject("Tesi");
+        tesi.put("ID", 0);
+        tesi.put("Nome", "Andrea");
+        tesi.put("Cognome", "Montanari");
+        tesi.put("Immagine", "https://graph.facebook.com/10152229194102933/picture?type=large");
+        tesi.put("Latitudine", 45.9580284);
+        tesi.put("Longitudine", 12.6673076);
+        tesi.put("Amici", false);
+
+        tesi.put("ID", 1);
+        tesi.put("Nome", "Marco");
+        tesi.put("Cognome", "Rossi");
+        tesi.put("Immagine", "https://graph.facebook.com/10152229194102933/picture?type=large");
+        tesi.put("Latitudine", 45.9581284);
+        tesi.put("Longitudine", 12.7873076);
+        tesi.put("Amici", false);
+        tesi.saveInBackground();
+        */
     }
 
 
