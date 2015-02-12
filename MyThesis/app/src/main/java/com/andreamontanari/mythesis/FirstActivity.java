@@ -1,6 +1,7 @@
 package com.andreamontanari.mythesis;
 
 import android.app.Notification;
+import android.graphics.Point;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -8,12 +9,15 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -28,6 +32,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,6 +42,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by andreamontanari on 09/02/15.
@@ -49,6 +55,7 @@ public class FirstActivity extends ActionBarActivity {
     String line = null;
     int code;
     LatLng latlng;
+    LatLng coords;
     private Marker myMarker;
     private GoogleMap map;
 
@@ -68,10 +75,10 @@ public class FirstActivity extends ActionBarActivity {
          *********************************/
 
         //recupero la posizione dell'utente
-        LatLng myPosition = new LatLng(46.079816, 13.231234);
+        LatLng myPosition = new LatLng(46.0809952,13.2136444);
 
         //inserisco il marker dell'utente e muovo la camera sul punto trovato
-        map.addMarker(new MarkerOptions()
+        final Marker myMarker = map.addMarker(new MarkerOptions()
                 .position(myPosition)
                 .title("Hello world"));
        //map.animateCamera(CameraUpdateFactory.newLatLngZoom(myPosition, 19)); //move camera to the latLng position
@@ -83,6 +90,7 @@ public class FirstActivity extends ActionBarActivity {
                 .title("Melbourne")
                 .snippet("Population: 4,137,400")
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.bank)));
+
 
         /********************************************
         *Invio coordinate correnti al Server
@@ -98,6 +106,11 @@ public class FirstActivity extends ActionBarActivity {
          *Inserisco posizioni scaricate dal server
          *****************************************/
 
+
+        //RIVEDI
+        Projection projection = map.getProjection();
+        Point screenPosition = projection.toScreenLocation(new LatLng(46.0809952,13.2136444));
+        Log.d("point screen", screenPosition.toString());
     }
 
     public static String GET(String url) {
@@ -179,17 +192,16 @@ public class FirstActivity extends ActionBarActivity {
                         Log.d("picture", immagine);
                         Log.d("picture", amici);
 
-                    Double la = 46.079816;
-                    Double lni = 13.231234;
-
-
                     Double lt = Double.parseDouble(lat);
                     Double ln = Double.parseDouble(lng);
+
+                   // getLocation(lt, ln, 0.005);
+
                     latlng = new LatLng(lt, ln);
 
                     myMarker = map.addMarker(new MarkerOptions()
                             .position(latlng)
-                            .title(name+" "+surname)
+                            .title(name + " " + surname)
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.library)));
 
                 }
@@ -224,5 +236,92 @@ public class FirstActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void getLocation(double x0, double y0, double radius) {
+        Random random = new Random();
+
+        // Convert radius from meters to degrees
+        double radiusInDegrees = radius / 111000f;
+
+        double u = random.nextDouble();
+        double v = random.nextDouble();
+        double w = radiusInDegrees * Math.sqrt(u);
+        double t = 2 * Math.PI * v;
+        double x = w * Math.cos(t);
+        double y = w * Math.sin(t);
+
+        // Adjust the x-coordinate for the shrinking of the east-west distances
+        double new_x = x / Math.cos(y0);
+
+        double foundLongitude = new_x + x0;
+        double foundLatitude = y + y0;
+        coords = new LatLng(foundLatitude, foundLongitude);
+
+        System.out.println("Longitude: " + foundLongitude + "  Latitude: " + foundLatitude );
+    }
+
+    /*
+    public class UpdateAsyncTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... urls) {
+
+            return UPDATE(urls[0]);
+        }
+    }
+
+    public String UPDATE(String url) {
+
+        ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+        nameValuePairs.add(new BasicNameValuePair("id", id));
+        nameValuePairs.add(new BasicNameValuePair("lat", String.valueOf(lau)));
+        nameValuePairs.add(new BasicNameValuePair("long", String.valueOf(lnu)));
+        Log.d("PROVA", id+ " " + lau +" " + lnu );
+
+        try {
+            HttpClient httpclient = new DefaultHttpClient();
+            HttpPost httppost = new HttpPost(url);
+            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+            HttpResponse response = httpclient.execute(httppost);
+            HttpEntity entity = response.getEntity();
+            is = entity.getContent();
+            Log.e("Update - pass 1", "connection success ");
+        } catch (Exception e) {
+            Log.e("Update - Fail 1", e.toString());
+        }
+
+        try {
+            BufferedReader reader = new BufferedReader
+                    (new InputStreamReader(is, "iso-8859-1"), 8);
+            StringBuilder sb = new StringBuilder();
+            while ((line = reader.readLine()) != null) {
+                sb.append(line + "\n");
+            }
+            is.close();
+            result = sb.toString();
+            Log.e("Update - pass 2", "connection success ");
+        } catch (Exception e) {
+            Log.e("Update - Fail 2", e.toString());
+        }
+
+        try {
+
+            JSONObject json_data = new JSONObject(result);
+            code = (json_data.getInt("code"));
+
+            if (code == 1) {
+                //Toast.makeText(getBaseContext(), "Inserted Successfully",
+                //Toast.LENGTH_SHORT).show();
+                Log.d("PROVA", "Updated");
+            } else {
+                //Toast.makeText(getBaseContext(), "Sorry, Try Again",
+                //  Toast.LENGTH_LONG).show();
+                Log.d("PROVA", "not updated, try again");
+            }
+        } catch (Exception e) {
+            Log.e("Update - Fail 3", e.toString());
+        }
+        new HttpAsyncTask().execute("http://alwaysdreambig.altervista.org/thesis/request.php");
+        return "Okay";
+    }
+*/
 }
 
