@@ -1,5 +1,14 @@
 package com.andreamontanari.mythesis;
 
+import com.andreamontanari.mythesis.algorithm.aggregation.Aggregation;
+import com.andreamontanari.mythesis.algorithm.aggregation.Element;
+import com.andreamontanari.mythesis.algorithm.aggregation.Node;
+import com.andreamontanari.mythesis.sweepline.Event;
+import com.andreamontanari.mythesis.sweepline.Intersection;
+import com.andreamontanari.mythesis.sweepline.Interval1D;
+import com.andreamontanari.mythesis.sweepline.Interval2D;
+import com.andreamontanari.mythesis.sweepline.IntervalST;
+import com.andreamontanari.mythesis.sweepline.MinPQ;
 import com.andreamontanari.mythesis.util.SystemUiHider;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -26,26 +35,33 @@ import android.widget.Toast;
 import org.json.JSONArray;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 
 /**
- * An example full-screen activity that shows and hides the system UI (i.e.
- * status bar and navigation/system bar) with user interaction.
  *
- * @see SystemUiHider
+ *Versione algoritmo client-side
+ *
+ *
  */
 public class SecondActivity extends Activity {
 
-    JSONArray jsonArray;
-    InputStream is = null;
-    String result = null;
-    String line = null;
-    int code;
     LatLng latlng;
-    LatLng coords;
-    private Marker myMarker;
     private GoogleMap map;
+    Projection projection;
+    double[] lats, longs;
+    Point screenPosition;
+
+    //sweepline
+    public Interval2D[] rects;
+    public com.andreamontanari.mythesis.sweepline.Point[] points;
+
+     //min-max aggregation
+    public static List<Element> F;
+    public static List<Node> ANS;
+    public static List<Node> Q;
+    public int[] friends;
 
     /**
      * Whether or not the system UI should be auto-hidden after
@@ -79,7 +95,7 @@ public class SecondActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_first);
+        setContentView(R.layout.activity_second);
 
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
@@ -89,6 +105,10 @@ public class SecondActivity extends Activity {
 
         Parse.initialize(this, "NEmJNLg1Y5x6FEUfJiDOwVXEaSrOMPbew2jALpZ9", "iOetfxLpSERC1fDCqX6Uwgvw2Ps11ufpl2TYXaei");
 
+        rects = new Interval2D[100];
+        points = new com.andreamontanari.mythesis.sweepline.Point[100];
+        friends = new int[100];
+        lats = longs = new double[100];
 
         /*********************************
          *Inserisco posizione utente
@@ -101,16 +121,8 @@ public class SecondActivity extends Activity {
         final Marker myMarker = map.addMarker(new MarkerOptions()
                 .position(myPosition)
                 .title("My Position"));
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(myPosition, 19)); //move camera to the latLng position (18 or 19)
-
-        //add custom marker --> png file
-        final LatLng MELBOURNE = new LatLng(-37.813, 144.962);
-        Marker melbourne = map.addMarker(new MarkerOptions()
-                .position(MELBOURNE)
-                .title("Melbourne")
-                .snippet("Population: 4,137,400")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.bank)));
-
+       // map.animateCamera(CameraUpdateFactory.newLatLngZoom(myPosition, 19)); //move camera to the latLng position (18 or 19)
+        map.moveCamera( CameraUpdateFactory.newLatLngZoom(myPosition , 19));
         /********************************************
          *Richiedo icone da inserire al Server
          *Inserisco posizioni scaricate dal server
@@ -123,6 +135,7 @@ public class SecondActivity extends Activity {
                 if (e == null) {
                     // your logic here
                     for (ParseObject po : parseObjects) {
+                        projection = map.getProjection();
 
                         String id = String.valueOf(po.getInt("ID"));
                         String name = po.getString("Nome");
@@ -134,31 +147,88 @@ public class SecondActivity extends Activity {
 
                         Double lt = Double.parseDouble(lat);
                         Double ln = Double.parseDouble(lng);
+                        int Id = Integer.parseInt(id);
 
                         latlng = new LatLng(lt, ln);
-
-                        Projection projection = map.getProjection();
-
 
                         if (amici.equals("1")) {
                             map.addMarker(new MarkerOptions()
                                     .position(latlng)
-                                    .title(name + " " + surname)
+                                    .title(id)
                                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.quadrifoglio))); //amico
                         } else {
                             map.addMarker(new MarkerOptions()
                                     .position(latlng)
-                                    .title(name + " " + surname)
+                                    .title(id)
                                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.library))); //non amico
                         }
-                        Point screenPosition = projection.toScreenLocation(latlng);
-                        Log.d("POSITION", screenPosition.toString()); //stampo punti relativi alle icone
+
+                        screenPosition = projection.toScreenLocation(latlng);
+
+                        int xmin = screenPosition.x;
+                        int ymin = screenPosition.y;
+                        int xmax = xmin + 32;
+                        int ymax = ymin + 37;
+
+                        lats[Id] = lt;
+                        longs[Id] = ln;
+
+
+                        points[Id] = new com.andreamontanari.mythesis.sweepline.Point(xmin, ymin, id);
+                        Log.d("PUNTO", points[Id].toString());
+                        rects[Id] = new Interval2D(new Interval1D(xmin, xmax), new Interval1D(ymin, ymax), points[Id]);
+                        friends[Id] = Integer.parseInt(amici);
                     }
                 } else {
                     Toast.makeText(SecondActivity.this, "Si è verificato un errore nella ricezione dei dati, riprovare", Toast.LENGTH_SHORT).show();
                 }
+
+                Intersection.sweepline(100, points, rects); //creo grafo dei conflitti
+
+
+                Q = new ArrayList<Node>();
+                ANS = new ArrayList<Node>();
+
+                //creo la lista di tutti i nodi Q con rilevanza stabilita in base all'amicizia, grado di sovrapposizione inizializzato a 0
+                for (int i=0; i<100; i++) {
+                    Q.add(new Node(points[i].getId(), points[i], friends[i], 0));
+                    ANS.add(new Node(points[i].getId(), points[i], friends[i], 0));
+                }
+
+                F = new ArrayList<Element>();
+
+                F = Aggregation.aggregation(0, 0, ANS);
+
+                int count = 0;
+                map.clear();
+                for (Element ex : F) {
+                    if (ex.show) {
+                        count++;
+                        //inserisco me stesso (meme)
+                        LatLng coords = getGeoCoords(new Point(ex.position.getX(), ex.position.getY()));
+                        //LatLng coords = new LatLng(lats[Integer.parseInt(ex.position.getId())], longs[Integer.parseInt(ex.position.getId())]);
+                        Log.d("LATLNG", coords.toString());
+                        if (ex.id.equals(ex.aggegratedWith)) {
+                            map.addMarker(new MarkerOptions()
+                                    .position(coords)
+                                    .title(ex.id)
+                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.library))); //singolo
+                        } else {
+                            //inserisco l'aggregatore (quadrifoglio per ora)
+                            map.addMarker(new MarkerOptions()
+                                    .position(coords)
+                                    .title("Gruppo")
+                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.bar))); //gruppo
+                        }
+                    }
+                }
+
+                Log.d("FINE", "FINE, "+count+" elementi mostrati su 100");
+
             }
+
         });
+
 
     }
 
@@ -203,5 +273,12 @@ public class SecondActivity extends Activity {
     private void delayedHide(int delayMillis) {
         mHideHandler.removeCallbacks(mHideRunnable);
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
+    }
+
+    public LatLng getGeoCoords(Point screenPosition) {
+        Projection projection = map.getProjection();
+
+        return projection.fromScreenLocation(screenPosition);
+
     }
 }
