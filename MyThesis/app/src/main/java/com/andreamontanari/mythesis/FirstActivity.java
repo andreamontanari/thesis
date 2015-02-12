@@ -4,6 +4,7 @@ import com.andreamontanari.mythesis.util.SystemUiHider;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -14,8 +15,10 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 import android.app.Activity;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
@@ -88,33 +91,24 @@ public class FirstActivity extends Activity {
 
 
         /*********************************
-         *Inserisco posizione utente
+         *recupero la posizione dell'utente
          *********************************/
 
-        //recupero la posizione dell'utente
         LatLng myPosition = new LatLng(46.0809952,13.2136444);
 
         //inserisco il marker dell'utente e muovo la camera sul punto trovato
         final Marker myMarker = map.addMarker(new MarkerOptions()
                 .position(myPosition)
                 .title("My Position"));
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(myPosition, 19)); //move camera to the latLng position (18 or 19)
-
-        //add custom marker --> png file
-        final LatLng MELBOURNE = new LatLng(-37.813, 144.962);
-        Marker melbourne = map.addMarker(new MarkerOptions()
-                .position(MELBOURNE)
-                .title("Melbourne")
-                .snippet("Population: 4,137,400")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.bank)));
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(myPosition, 18)); //muovo la camera alla posizione latlng indicata (livello zoom 18 o 19)
 
         /********************************************
          *Richiedo icone da inserire al Server
          *Inserisco posizioni scaricate dal server
          *****************************************/
 
-        ParseQuery<ParseObject> query2 = new ParseQuery<ParseObject>("Tesi");
-        query2.findInBackground(new FindCallback<ParseObject>() {
+        ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("Tesi");
+        query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> parseObjects, com.parse.ParseException e) {
                 if (e == null) {
@@ -151,6 +145,7 @@ public class FirstActivity extends Activity {
                 }
             }
         });
+
 
     }
 

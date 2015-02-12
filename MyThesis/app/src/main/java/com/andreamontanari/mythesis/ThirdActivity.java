@@ -113,8 +113,8 @@ public class ThirdActivity extends Activity {
          *Inserisco posizioni scaricate dal server
          *****************************************/
 
-        ParseQuery<ParseObject> query2 = new ParseQuery<ParseObject>("Tesi");
-        query2.findInBackground(new FindCallback<ParseObject>() {
+        ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("Tesi");
+        query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> parseObjects, com.parse.ParseException e) {
                 if (e == null) {

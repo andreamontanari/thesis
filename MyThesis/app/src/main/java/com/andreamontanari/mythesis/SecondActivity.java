@@ -4,6 +4,7 @@ import com.andreamontanari.mythesis.util.SystemUiHider;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -14,8 +15,10 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 import android.app.Activity;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
@@ -113,8 +116,8 @@ public class SecondActivity extends Activity {
          *Inserisco posizioni scaricate dal server
          *****************************************/
 
-        ParseQuery<ParseObject> query2 = new ParseQuery<ParseObject>("Tesi");
-        query2.findInBackground(new FindCallback<ParseObject>() {
+        ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("Tesi");
+        query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> parseObjects, com.parse.ParseException e) {
                 if (e == null) {
@@ -134,6 +137,9 @@ public class SecondActivity extends Activity {
 
                         latlng = new LatLng(lt, ln);
 
+                        Projection projection = map.getProjection();
+
+
                         if (amici.equals("1")) {
                             map.addMarker(new MarkerOptions()
                                     .position(latlng)
@@ -145,6 +151,8 @@ public class SecondActivity extends Activity {
                                     .title(name + " " + surname)
                                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.library))); //non amico
                         }
+                        Point screenPosition = projection.toScreenLocation(latlng);
+                        Log.d("POSITION", screenPosition.toString()); //stampo punti relativi alle icone
                     }
                 } else {
                     Toast.makeText(SecondActivity.this, "Si è verificato un errore nella ricezione dei dati, riprovare", Toast.LENGTH_SHORT).show();
