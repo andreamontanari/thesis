@@ -167,16 +167,16 @@ public class SecondActivity extends Activity {
 
                         int xmin = screenPosition.x;
                         int ymin = screenPosition.y;
-                        int xmax = xmin + 32;
-                        int ymax = ymin + 37;
+                        int xmax = xmin - 75;
+                        int ymax = ymin - 75;
 
                         lats[Id] = lt;
                         longs[Id] = ln;
 
 
-                        points[Id] = new com.andreamontanari.mythesis.sweepline.Point(xmin, ymin, id);
+                        points[Id] = new com.andreamontanari.mythesis.sweepline.Point(xmax, ymax, id);
                         Log.d("PUNTO", points[Id].toString());
-                        rects[Id] = new Interval2D(new Interval1D(xmin, xmax), new Interval1D(ymin, ymax), points[Id]);
+                        rects[Id] = new Interval2D(new Interval1D(xmax, xmin), new Interval1D(ymax, ymin), points[Id]);
                         friends[Id] = Integer.parseInt(amici);
                     }
                 } else {
@@ -208,7 +208,8 @@ public class SecondActivity extends Activity {
                         LatLng coords = getGeoCoords(new Point(ex.position.getX(), ex.position.getY()));
                         //LatLng coords = new LatLng(lats[Integer.parseInt(ex.position.getId())], longs[Integer.parseInt(ex.position.getId())]);
                         Log.d("LATLNG", coords.toString());
-                        if (ex.id.equals(ex.aggegratedWith)) {
+                        Log.d("PROVE di eq", ex.toString());
+                        if (!ex.aggregator) {
                             map.addMarker(new MarkerOptions()
                                     .position(coords)
                                     .title(ex.id)

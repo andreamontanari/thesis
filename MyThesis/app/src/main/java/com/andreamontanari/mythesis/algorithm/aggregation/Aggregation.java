@@ -108,7 +108,7 @@ public class Aggregation {
 			Node n = getMaxDegNode(ANS); //recupero il nodo con grado di sovrapposizione massimo  -- O(N)
 			if (n.degree > gt && n.relevance > rt) {
 				//Aggiungo il nodo aggregatore n alla lista di output S
-				Element e = new Element(n.id, n.position, true, n);
+				Element e = new Element(n.id, n.position, true, true, n);
 				S.add(e);		//O(1)
 				//Adj List di n
 				List<Integer> adjList = new ArrayList<Integer>();
@@ -117,15 +117,15 @@ public class Aggregation {
 				for (int j=0; j < adjList.size(); j++) {
 					Node aggregated = Node.getNode(adjList.get(j).toString(), ANS);
 					if (aggregated != null) {
-					Element aggr = new Element(aggregated.id, aggregated.position, false, n);
-					S.add(aggr);	
+					Element aggr = new Element(aggregated.id, aggregated.position, false, false, n);
+					S.add(aggr);
 					ANS.remove(aggregated);
 					}
 				}
 				}
 				ANS.remove(n);
 			} else {
-				Element e = new Element(n.id, n.position, true, n);
+				Element e = new Element(n.id, n.position, true, false, n);
 				S.add(e);		//O(1)
 				ANS.remove(n);
 			}
@@ -158,7 +158,7 @@ public class Aggregation {
 					Node n = getMinDegNode(); //recupero il nodo con grado di sovrapposizione massimo  -- O(N)
 					if (n.degree > gt && n.relevance > rt) {
 						//Aggiungo il nodo aggregatore n alla lista di output S
-						Element e = new Element(n.id, n.position, true, n);
+						Element e = new Element(n.id, n.position, true, true, n);
 						S.add(e);		//O(1)
 						//Adj List di n
 						List<Integer> adjList = new ArrayList<Integer>();
@@ -167,7 +167,7 @@ public class Aggregation {
 						for (int j=0; j < adjList.size(); j++) {
 							Node aggregated = Node.getNode(adjList.get(j).toString(), ANS);
 							if (aggregated != null) {
-							Element aggr = new Element(aggregated.id, aggregated.position, false, n);
+							Element aggr = new Element(aggregated.id, aggregated.position, false, false, n);
 							S.add(aggr);	
 							ANS.remove(aggregated);
 							}
@@ -175,7 +175,7 @@ public class Aggregation {
 						}
 						ANS.remove(n);
 					} else {
-						Element e = new Element(n.id, n.position, true, n);
+						Element e = new Element(n.id, n.position, true, true, n);
 						S.add(e);		//O(1)
 						ANS.remove(n);
 					}
