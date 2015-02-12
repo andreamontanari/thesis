@@ -1,4 +1,4 @@
-package com.andreamontanari.mythesis.util;
+package com.andreamontanari.mythesis;
 
 /**
  * Created by andreamontanari on 12/02/15.
@@ -18,4 +18,13 @@ public class Person {
         this.lng = lng;
         this.amici = amici;
     }
+
+    public int getFriends() {
+        return Integer.parseInt(amici);
+    }
+    public String getCompleteName() {
+        return nome+" "+cognome;
+    }
+
+
 }

@@ -3,12 +3,9 @@ package com.andreamontanari.mythesis;
 import com.andreamontanari.mythesis.algorithm.aggregation.Aggregation;
 import com.andreamontanari.mythesis.algorithm.aggregation.Element;
 import com.andreamontanari.mythesis.algorithm.aggregation.Node;
-import com.andreamontanari.mythesis.sweepline.Event;
 import com.andreamontanari.mythesis.sweepline.Intersection;
 import com.andreamontanari.mythesis.sweepline.Interval1D;
 import com.andreamontanari.mythesis.sweepline.Interval2D;
-import com.andreamontanari.mythesis.sweepline.IntervalST;
-import com.andreamontanari.mythesis.sweepline.MinPQ;
 import com.andreamontanari.mythesis.util.SystemUiHider;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -32,9 +29,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
-import org.json.JSONArray;
-
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,7 +55,7 @@ public class SecondActivity extends Activity {
     public static List<Element> F;
     public static List<Node> ANS;
     public static List<Node> Q;
-    public int[] friends;
+    public Person[] people;
 
     /**
      * Whether or not the system UI should be auto-hidden after
@@ -107,7 +101,7 @@ public class SecondActivity extends Activity {
 
         rects = new Interval2D[100];
         points = new com.andreamontanari.mythesis.sweepline.Point[100];
-        friends = new int[100];
+        people = new Person[100];
         lats = longs = new double[100];
 
         /*********************************
@@ -177,7 +171,7 @@ public class SecondActivity extends Activity {
                         points[Id] = new com.andreamontanari.mythesis.sweepline.Point(xmax, ymax, id);
                         Log.d("PUNTO", points[Id].toString());
                         rects[Id] = new Interval2D(new Interval1D(xmax, xmin), new Interval1D(ymax, ymin), points[Id]);
-                        friends[Id] = Integer.parseInt(amici);
+                        people[Id] = new Person(name, surname, lat, lng, amici);
                     }
                 } else {
                     Toast.makeText(SecondActivity.this, "Si è verificato un errore nella ricezione dei dati, riprovare", Toast.LENGTH_SHORT).show();
@@ -191,13 +185,13 @@ public class SecondActivity extends Activity {
 
                 //creo la lista di tutti i nodi Q con rilevanza stabilita in base all'amicizia, grado di sovrapposizione inizializzato a 0
                 for (int i=0; i<100; i++) {
-                    Q.add(new Node(points[i].getId(), points[i], friends[i], 0));
-                    ANS.add(new Node(points[i].getId(), points[i], friends[i], 0));
+                    Q.add(new Node(points[i].getId(), points[i], people[i].getFriends(), 0));
+                    ANS.add(new Node(points[i].getId(), points[i], people[i].getFriends(), 0));
                 }
 
                 F = new ArrayList<Element>();
 
-                F = Aggregation.aggregation(0, 0, ANS);
+                F = Aggregation.aggregation(1, 0, ANS);
 
                 int count = 0;
                 map.clear();
@@ -212,8 +206,8 @@ public class SecondActivity extends Activity {
                         if (!ex.aggregator) {
                             map.addMarker(new MarkerOptions()
                                     .position(coords)
-                                    .title(ex.id)
-                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.library))); //singolo
+                                    .title(people[Integer.parseInt(ex.id)].getCompleteName())
+                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.library)));    //singolo
                         } else {
                             //inserisco l'aggregatore (quadrifoglio per ora)
                             map.addMarker(new MarkerOptions()
