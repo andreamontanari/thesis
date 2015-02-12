@@ -22,6 +22,11 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.parse.FindCallback;
+import com.parse.GetCallback;
+import com.parse.Parse;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -38,10 +43,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.Console;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -70,6 +77,9 @@ public class FirstActivity extends ActionBarActivity {
         map = mapFragment.getMap();
         map.setMyLocationEnabled(true);
 
+        Parse.initialize(this, "NEmJNLg1Y5x6FEUfJiDOwVXEaSrOMPbew2jALpZ9", "iOetfxLpSERC1fDCqX6Uwgvw2Ps11ufpl2TYXaei");
+
+
         /*********************************
         *Inserisco posizione utente
          *********************************/
@@ -80,8 +90,8 @@ public class FirstActivity extends ActionBarActivity {
         //inserisco il marker dell'utente e muovo la camera sul punto trovato
         final Marker myMarker = map.addMarker(new MarkerOptions()
                 .position(myPosition)
-                .title("Hello world"));
-       //map.animateCamera(CameraUpdateFactory.newLatLngZoom(myPosition, 19)); //move camera to the latLng position
+                .title("My Position"));
+       map.animateCamera(CameraUpdateFactory.newLatLngZoom(myPosition, 18)); //move camera to the latLng position (18 or 19)
 
         //add custom marker --> png file
          final LatLng MELBOURNE = new LatLng(-37.813, 144.962);
@@ -100,11 +110,76 @@ public class FirstActivity extends ActionBarActivity {
         /********************************************
          *Richiedo icone da inserire al Server
          *********************************************/
-        new HttpAsyncTask().execute("http://alwaysdreambig.altervista.org/thesis/request.php");
+       // new HttpAsyncTask().execute("http://alwaysdreambig.altervista.org/thesis/request.php");
 
         /*****************************************
          *Inserisco posizioni scaricate dal server
          *****************************************/
+        /*
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Tesi");
+        query.getInBackground("xWMyZ4YEGZ", new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject parseObject, com.parse.ParseException e) {
+                if (e == null) {
+                    // object will be your row of Tesi
+                    String name = parseObject.getString("Nome");
+                    Log.d("NOME", name);
+                } else {
+                    // something went wrong
+                    Log.d("NOME", "non trovato");
+                }
+            }
+        });
+*/
+        ParseQuery<ParseObject> query2 = new ParseQuery<ParseObject>("Tesi");
+        query2.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> parseObjects, com.parse.ParseException e) {
+                if (e == null) {
+                    // your logic here
+                    for (ParseObject po : parseObjects) {
+
+                        String id = String.valueOf(po.getInt("ID"));
+                        String name = po.getString("Nome");
+                        String surname = po.getString("Cognome");
+                        String lat = po.getString("Latitudine");
+                        String lng = po.getString("Longitudine");
+                        //String email = po.getString("Email");
+                        String immagine = po.getString("Immagine");
+                        String amici = String.valueOf(po.getInt("Amici"));
+
+                        Log.d("id", id);
+                        Log.d("nome", name);
+                        Log.d("cognome", surname);
+                        Log.d( "lat, long:", lat + "  " + lng);
+                       // Log.d("mail", email);
+                        Log.d("picture", immagine);
+                        Log.d("picture", amici);
+
+                        Double lt = Double.parseDouble(lat);
+                        Double ln = Double.parseDouble(lng);
+
+                        // getLocation(lt, ln, 0.005);
+
+                        latlng = new LatLng(lt, ln);
+
+                        if (amici.equals("1")) {
+                            map.addMarker(new MarkerOptions()
+                                    .position(latlng)
+                                    .title(name + " " + surname)
+                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.quadrifoglio))); //amico
+                        } else {
+                            map.addMarker(new MarkerOptions()
+                                    .position(latlng)
+                                    .title(name + " " + surname)
+                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.library))); //non amico
+                        }
+                    }
+                } else {
+                    // handle Parse Exception here
+                }
+            }
+        });
 
 
         //RIVEDI
