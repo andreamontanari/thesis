@@ -20,6 +20,7 @@ import com.parse.GetCallback;
 import com.parse.Parse;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import android.app.Activity;
 import android.graphics.Point;
@@ -53,7 +54,7 @@ public class ThirdActivity extends Activity {
     int code;
     LatLng coords;
     private Marker myMarker;
-    public final int numIcons = 500;
+    public final int numIcons = 300;
 
     LatLng latlng;
     private GoogleMap map;
@@ -70,6 +71,8 @@ public class ThirdActivity extends Activity {
     public static List<Node> ANS;
     public static List<Node> Q;
     public Person[] people;
+
+    private static List<ParseObject>allObjects = new ArrayList<ParseObject>();
 
     /**
      * Whether or not the system UI should be auto-hidden after
@@ -111,12 +114,12 @@ public class ThirdActivity extends Activity {
         map = mapFragment.getMap();
         map.setMyLocationEnabled(true);
 
-        Parse.initialize(this, "NEmJNLg1Y5x6FEUfJiDOwVXEaSrOMPbew2jALpZ9", "iOetfxLpSERC1fDCqX6Uwgvw2Ps11ufpl2TYXaei");
-
         rects = new Interval2D[numIcons];
         points = new com.andreamontanari.mythesis.sweepline.Point[numIcons];
         people = new Person[numIcons];
         lats = longs = new double[numIcons];
+
+        Parse.initialize(this, "NEmJNLg1Y5x6FEUfJiDOwVXEaSrOMPbew2jALpZ9", "iOetfxLpSERC1fDCqX6Uwgvw2Ps11ufpl2TYXaei");
 
         /*********************************
          *Inserisco posizione utente
@@ -136,121 +139,123 @@ public class ThirdActivity extends Activity {
          *Richiedo icone da inserire al Server
          *Inserisco posizioni scaricate dal server
          *****************************************/
+        final ParseQuery parseQuery = new ParseQuery("TesiReal");
+        parseQuery.setLimit(numIcons);
+        //parseQuery.whereEqualTo("Online", 1);
+        parseQuery.findInBackground(getAllObjects());
 
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("TesiReal");
-        query.whereEqualTo("playerEmail", "dstemkoski@example.com");
-        query.getFirstInBackground(new GetCallback<ParseObject>() {
-            @Override
-            public void done(ParseObject parseObject, com.parse.ParseException e) {
-                if (parseObject == null) {
-                    // Log the error
-                } else {
-                    // Code here to do something with the query result
-                }
-            }
-        });
+    }
 
-        ParseQuery<ParseObject> query2 = new ParseQuery<ParseObject>("TesiReal");
-        query2.setLimit(500);
-        query2.findInBackground(new FindCallback<ParseObject>() {
+    FindCallback getAllObjects() {
+        return new FindCallback() {
             @Override
-            public void done(List<ParseObject> parseObjects, com.parse.ParseException e) {
+            public void done(List list, com.parse.ParseException e) {
                 if (e == null) {
-                    // your logic here
-                    for (ParseObject po : parseObjects) {
-                        projection = map.getProjection();
 
-                        String id = String.valueOf(po.getInt("ID"));
-                        String name = po.getString("Nome");
-                        String surname = po.getString("Cognome");
-                        String lat = po.getString("Latitudine");
-                        String lng = po.getString("Longitudine");
-                        String immagine = po.getString("Immagine"); //da aggiungere
-                        String amici = String.valueOf(po.getInt("Amici"));
-
-                        Double lt = Double.parseDouble(lat);
-                        Double ln = Double.parseDouble(lng);
-                        int Id = 0;//Integer.parseInt(id);
-
-                        latlng = new LatLng(lt, ln);
-                        /*
-                        if (amici.equals("1")) {
-                            map.addMarker(new MarkerOptions()
-                                    .position(latlng)
-                                    .title(id)
-                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.quadrifoglio))); //amico
-                        } else {
-                            map.addMarker(new MarkerOptions()
-                                    .position(latlng)
-                                    .title(id)
-                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.library))); //non amico
-                        }
-                        */
-                        screenPosition = projection.toScreenLocation(latlng);
-
-                        int xmin = screenPosition.x;
-                        int ymin = screenPosition.y;
-                        int xmax = xmin - 75;
-                        int ymax = ymin - 75;
-
-                        lats[Id] = lt;
-                        longs[Id] = ln;
-
-
-                        points[Id] = new com.andreamontanari.mythesis.sweepline.Point(xmax, ymax, id);
-                        rects[Id] = new Interval2D(new Interval1D(xmax, xmin), new Interval1D(ymax, ymin), points[Id]);
-                        people[Id] = new Person(name, surname, lat, lng, amici);
-                        Id++;
+                    allObjects.addAll(list);
+                    int skip = 0;
+                    int limit = 1000;
+                    if (list.size() == limit) {
+                        skip = skip + limit;
+                        ParseQuery query = new ParseQuery("TesiReal");
+                        query.setSkip(skip);
+                        query.setLimit(limit);
+                        query.findInBackground(getAllObjects());
                     }
-                } else {
-                    Toast.makeText(ThirdActivity.this, "Si è verificato un errore nella ricezione dei dati, riprovare", Toast.LENGTH_SHORT).show();
-                }
-                // troppo veloce qui?
-                Intersection.sweepline(numIcons, points, rects); //creo grafo dei conflitti
+                    //We have a full PokeDex
+                    else {
+                        //USE FULL DATA AS INTENDED
+                        Log.d("PROVA", ""+list.size());
+                        List<ParseObject> l = list;
+                        for (ParseObject po : l) {
+                                projection = map.getProjection();
+
+                                String id = String.valueOf(po.getInt("ID"));
+                                String name = po.getString("Nome");
+                                String surname = po.getString("Cognome");
+                                String lat = po.getString("Latitudine");
+                                String lng = po.getString("Longitudine");
+                                //String immagine = po.getString("Immagine"); //da aggiungere
+                                String accuracy = String.valueOf(po.getInt("Accuratezza"));
+                                //String online = String.valueOf(po.getInt("Online"));
+                                String amici = String.valueOf(po.getInt("Amici"));
+
+                                Double lt = Double.parseDouble(lat);
+                                Double ln = Double.parseDouble(lng);
+                                int Id = Integer.parseInt(id);
+
+                                latlng = new LatLng(lt, ln);
+
+                                if (amici.equals("1")) {
+                                    map.addMarker(new MarkerOptions()
+                                            .position(latlng)
+                                            .title(id)
+                                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.quadrifoglio))); //amico
+                                } else {
+                                    map.addMarker(new MarkerOptions()
+                                            .position(latlng)
+                                            .title(id)
+                                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.library))); //non amico
+                                }
+
+                                screenPosition = projection.toScreenLocation(latlng);
+
+                                int xmin = screenPosition.x;
+                                int ymin = screenPosition.y;
+                                int xmax = xmin - 100;
+                                int ymax = ymin - 100;
+
+                                lats[Id] = lt;
+                                longs[Id] = ln;
+
+                                points[Id] = new com.andreamontanari.mythesis.sweepline.Point(xmax, ymax, id);
+                                rects[Id] = new Interval2D(new Interval1D(xmax, xmin), new Interval1D(ymax, ymin), points[Id]);
+                                people[Id] = new Person(name, surname, lat, lng, amici, accuracy);
+
+                            }
+
+                        Intersection.sweepline(numIcons, points, rects); //creo grafo dei conflitti
 
 
-                Q = new ArrayList<Node>();
-                ANS = new ArrayList<Node>();
+                        Q = new ArrayList<Node>();
+                        ANS = new ArrayList<Node>();
 
-                //creo la lista di tutti i nodi Q con rilevanza stabilita in base all'amicizia, grado di sovrapposizione inizializzato a 0
-                for (int i=0; i<numIcons; i++) {
-                    Q.add(new Node(points[i].getId(), points[i], people[i].getFriends(), 0));
-                    ANS.add(new Node(points[i].getId(), points[i], people[i].getFriends(), 0));
-                }
-
-                F = new ArrayList<Element>();
-
-                F = Aggregation.aggregation(1, 0, ANS);
-
-                int count = 0;
-               // map.clear();
-                for (Element ex : F) {
-                    if (ex.show) {
-                        count++;
-                        //inserisco me stesso (meme)
-                        LatLng coords = new LatLng(Double.parseDouble(people[Integer.parseInt(ex.id)].lat), Double.parseDouble(people[Integer.parseInt(ex.id)].lng));
-                        //LatLng coords = getGeoCoords(new Point(ex.position.getX(), ex.position.getY()));
-                        //LatLng coords = new LatLng(lats[Integer.parseInt(ex.position.getId())], longs[Integer.parseInt(ex.position.getId())]);
-                        if (!ex.aggregator) {
-                            map.addMarker(new MarkerOptions()
-                                    .position(coords)
-                                    .title(people[Integer.parseInt(ex.id)].getCompleteName())
-                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.library)));    //singolo
-                        } else {
-                            //inserisco l'aggregatore (quadrifoglio per ora)
-                            map.addMarker(new MarkerOptions()
-                                    .position(coords)
-                                    .title("Gruppo")
-                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.bar))); //gruppo
+                        //creo la lista di tutti i nodi Q con rilevanza stabilita in base all'amicizia, grado di sovrapposizione inizializzato a 0
+                        for (int i=0; i<numIcons; i++) {
+                            Q.add(new Node(points[i].getId(), points[i], people[i].getFriends(), 0, people[i].getAccuracy()));
+                            ANS.add(new Node(points[i].getId(), points[i], people[i].getFriends(), 0, people[i].getAccuracy()));
                         }
+
+                        F = new ArrayList<Element>();
+
+                        F = Aggregation.realAggregation(1, 0, 50, ANS);
+
+                        int count = 0;
+                        map.clear();
+                        for (Element ex : F) {
+                            if (ex.show) {
+                                count++;
+                                //inserisco me stesso (meme)
+                                LatLng coords = new LatLng(Double.parseDouble(people[Integer.parseInt(ex.id)].lat), Double.parseDouble(people[Integer.parseInt(ex.id)].lng));
+                                if (!ex.aggregator) {
+                                    map.addMarker(new MarkerOptions()
+                                            .position(coords)
+                                            .title(people[Integer.parseInt(ex.id)].getCompleteName())
+                                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.library)));    //singolo
+                                } else {
+                                    //inserisco l'aggregatore (quadrifoglio per ora)
+                                    map.addMarker(new MarkerOptions()
+                                            .position(coords)
+                                            .title("Gruppo")
+                                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.bar))); //gruppo
+                                }
+                            }
+                        }
+                        Toast.makeText(ThirdActivity.this, count+" elementi mostrati su "+ numIcons +" online",Toast.LENGTH_LONG).show();
                     }
                 }
-                Toast.makeText(ThirdActivity.this, count+" elementi mostrati su 500",Toast.LENGTH_LONG).show();
             }
-
-        });
-
-
+        };
     }
 
 

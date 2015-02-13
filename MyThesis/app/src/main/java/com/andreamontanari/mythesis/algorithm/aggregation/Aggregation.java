@@ -35,8 +35,8 @@ public class Aggregation {
 		
 		//creo la lista di tutti i nodi Q con rilevanza arbitraria, grado di sovrapposizione inizializzato a 0
 		for (int i=0; i<numIcons; i++) {
-			Q.add(new Node(Intersection.points[i].getId(), Intersection.points[i], relevance, 0));
-			ANS.add(new Node(Intersection.points[i].getId(), Intersection.points[i], relevance, 0));
+			Q.add(new Node(Intersection.points[i].getId(), Intersection.points[i], relevance, 0, 0));
+			ANS.add(new Node(Intersection.points[i].getId(), Intersection.points[i], relevance, 0, 0));
 		}
 		S = new ArrayList<Element>();
     	
@@ -140,7 +140,63 @@ public class Aggregation {
         }
 		return S;
 	}
-	
+
+    //calcola la lista di nodi da inserire -- gt : grade Threshold , rt : relevance Threshold
+    public static List<Element> minAggregation(double gt, int rt, int acct, List<Node> ANS) {
+
+        S = new ArrayList<Element>();
+        boolean b = true;
+
+        if (ANS.size() == 0)
+        {
+            return S;
+        } else {
+            //calcolo i gradi di sovrapposizione per tutti i nodi di ANS -- solo la prima volta
+            if (b)
+                calculateDeg(ANS);		// O(N)
+            b = false;
+
+            while (ANS.size() > 0) {	//O(N)
+                Node n = getMaxDegNode(ANS); //recupero il nodo con grado di sovrapposizione massimo  -- O(N)
+                if (n.degree > gt && n.relevance > rt && n.accuracy > acct) {
+                    //Aggiungo il nodo aggregatore n alla lista di output S
+                    Element e = new Element(n.id, n.position, true, true, n);
+                    S.add(e);		//O(1)
+                    //Adj List di n
+                    List<Integer> adjList = new ArrayList<Integer>();
+                    adjList = ConflictGraph.outEdges(Integer.parseInt(n.id)); //O(1)
+                    if (adjList.size() > 0) {
+                        for (int j=0; j < adjList.size(); j++) {
+                            Node aggregated = Node.getNode(adjList.get(j).toString(), ANS);
+                            if (aggregated != null) {
+                                Element aggr = new Element(aggregated.id, aggregated.position, false, false, n);
+                                S.add(aggr);
+                                ANS.remove(aggregated);
+                            }
+                        }
+                    }
+                    ANS.remove(n);
+                } else {
+                    if (n.accuracy > acct) {
+                        Element e = new Element(n.id, n.position, true, false, n);
+                        S.add(e);        //O(1)
+                        ANS.remove(n);
+                    } else {
+                        ANS.remove(n);
+                    }
+                }
+            }
+        }
+        int co = 0;
+        for (Element e : S) {
+            if (e.show) {
+                co++;
+            }
+
+        }
+        return S;
+    }
+
 	//calcola la lista di nodi da inserire -- gt : grade Threshold , rt : relevance Threshold
 	public static List<Element> maxAggregation(double gt, int rt) {
 		boolean b = true;
@@ -193,7 +249,11 @@ public class Aggregation {
     public static List<Element> aggregation(double gradeT, int relevance, List<Node> ANS) {
         return minAggregation(gradeT, relevance, ANS);
     }
-	
+
+    public static List<Element> realAggregation(double gradeT, int relevance, int accuracy, List<Node> ANS) {
+        return minAggregation(gradeT, relevance, accuracy, ANS);
+    }
+
 	//Algoritmo di massima aggregazione (inizializzazione+algoritmo)
 	public static void secondPartB(int numIcon, double gradeT, int relevance) {
 		initSet(numIcon);

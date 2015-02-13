@@ -172,7 +172,7 @@ public class SecondActivity extends Activity {
 
                         points[Id] = new com.andreamontanari.mythesis.sweepline.Point(xmax, ymax, id);
                         rects[Id] = new Interval2D(new Interval1D(xmax, xmin), new Interval1D(ymax, ymin), points[Id]);
-                        people[Id] = new Person(name, surname, lat, lng, amici);
+                        people[Id] = new Person(name, surname, lat, lng, amici, "");
                     }
                 } else {
                     Toast.makeText(SecondActivity.this, "Si è verificato un errore nella ricezione dei dati, riprovare", Toast.LENGTH_SHORT).show();
@@ -186,8 +186,8 @@ public class SecondActivity extends Activity {
 
                 //creo la lista di tutti i nodi Q con rilevanza stabilita in base all'amicizia, grado di sovrapposizione inizializzato a 0
                 for (int i=0; i<numIcons; i++) {
-                    Q.add(new Node(points[i].getId(), points[i], people[i].getFriends(), 0));
-                    ANS.add(new Node(points[i].getId(), points[i], people[i].getFriends(), 0));
+                    Q.add(new Node(points[i].getId(), points[i], people[i].getFriends(), 0, 0));
+                    ANS.add(new Node(points[i].getId(), points[i], people[i].getFriends(), 0, 0));
                 }
 
                 F = new ArrayList<Element>();
@@ -217,7 +217,7 @@ public class SecondActivity extends Activity {
                         }
                     }
                 }
-                Toast.makeText(SecondActivity.this, count+" elementi mostrati su 100",Toast.LENGTH_LONG).show();
+                Toast.makeText(SecondActivity.this,  count+" elementi mostrati su "+ numIcons +" online",Toast.LENGTH_LONG).show();
             }
 
         });

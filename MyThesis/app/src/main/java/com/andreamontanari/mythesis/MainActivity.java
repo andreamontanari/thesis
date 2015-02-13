@@ -18,8 +18,8 @@ import java.util.Random;
 public class MainActivity extends ActionBarActivity {
 
     String[] la,ln;
-    String[] names = {"Andrea", "Marco", "Paolo", "Anna", "Giorgia", "Susanna", "Antonia", "Gianni", "Beppe", "Carlo","Luca", "Giovanni", "Manuel", "Francesca", "Alice"};
-    String[] surnames = {"Verdi","Rossi","Bianchi","Santi","Montanari","Blu","Giannelli","Camilot","Burigat","De Toni","De Carli", "Dicante", "Meneghel"};
+    String[] names = {"Andrea" ,"Teresa","Gianna", "Marco", "Paolo", "Anna", "Giorgia", "Susanna", "Antonia", "Gianni", "Beppe", "Carlo","Luca", "Giovanni", "Manuel", "Francesca", "Alice", "Gabriele", "Matteo", "Lucia", "Sara", "Melissa", "Alessandra", "Stefano"};
+    String[] surnames = {"Verdi","Rossi","Bianchi","Santi","Montanari","Blu","Giannelli","Camilot","Burigat","De Toni","De Carli", "Dicante", "Meneghel", "Dal Mas", "Roncaglia", "Bet","Dovier", "Zuppi", "Kostner", "Giorgi", "De Paoli", "Turri", "Verga", "Totti"};
 
     public static String[] lats = new String[1000];
     public static String[] longs = new String[1000];
@@ -57,6 +57,7 @@ public class MainActivity extends ActionBarActivity {
         }*/
 
         /*
+
         //CODICE PER INIZIALIZZARE DB demo3
         for (int i=0; i<1000; i++) {
             lats[i] = String.valueOf(RandomCoordinates.getLats(46.0809952, 13.2136444, 50));
@@ -69,7 +70,7 @@ public class MainActivity extends ActionBarActivity {
         Parse.initialize(this, "NEmJNLg1Y5x6FEUfJiDOwVXEaSrOMPbew2jALpZ9", "iOetfxLpSERC1fDCqX6Uwgvw2Ps11ufpl2TYXaei");
 
 
-        for (int i=400; i<500; i++) { //come sincronizzare il processo?
+        for (int i=200; i<300; i++) { //come sincronizzare il processo?
             tesiReal = new ParseObject("TesiReal");
             tesiReal.put("ID", i);
             tesiReal.put("Nome", randomName());
@@ -78,13 +79,11 @@ public class MainActivity extends ActionBarActivity {
             tesiReal.put("Latitudine", lats[i]);
             tesiReal.put("Longitudine", longs[i]);
             tesiReal.put("Amici", randomAmici());
-            tesiReal.put("Online", randomAmici());
+            tesiReal.put("Online", "1");
             tesiReal.put("Accuratezza", randomNumber());
             tesiReal.saveInBackground();
         }
         */
-
-
     }
 
 

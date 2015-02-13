@@ -10,12 +10,14 @@ public class Node {
 	public int relevance;
 	public String id;
 	public int degree;
+    public int accuracy;
 
-    public Node(String id, Point position, int relevance, int degree) {
+    public Node(String id, Point position, int relevance, int degree, int accuracy) {
         this.id = id;
         this.position = position;
         this.relevance = relevance;
         this.degree = degree;
+        this.accuracy = accuracy;
     }
 
     public String toString() {
