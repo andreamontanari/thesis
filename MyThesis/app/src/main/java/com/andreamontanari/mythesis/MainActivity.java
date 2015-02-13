@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.parse.Parse;
+import com.parse.ParseException;
 import com.parse.ParseObject;
 
 import java.util.Random;
@@ -19,13 +20,18 @@ public class MainActivity extends ActionBarActivity {
     String[] la,ln;
     String[] names = {"Andrea", "Marco", "Paolo", "Anna", "Giorgia", "Susanna", "Antonia", "Gianni", "Beppe", "Carlo","Luca", "Giovanni", "Manuel", "Francesca", "Alice"};
     String[] surnames = {"Verdi","Rossi","Bianchi","Santi","Montanari","Blu","Giannelli","Camilot","Burigat","De Toni","De Carli", "Dicante", "Meneghel"};
+
+    public static String[] lats = new String[1000];
+    public static String[] longs = new String[1000];
+
+    public ParseObject tesiReal;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         /*
-        CODICE PER INIZIALIZZARE DB PARSE
+        //CODICE PER INIZIALIZZARE DB demo2
         getRandomPoints();
 
 
@@ -45,9 +51,40 @@ public class MainActivity extends ActionBarActivity {
             tesi.put("Latitudine", la[i]);
             tesi.put("Longitudine", ln[i]);
             tesi.put("Amici", randomAmici());
+            tesi.put("Online", randomAmici());
+            tesi.put("Accuratezza", randomNumber());
             tesi.saveInBackground();
+        }*/
+
+        /*
+        //CODICE PER INIZIALIZZARE DB demo3
+        for (int i=0; i<1000; i++) {
+            lats[i] = String.valueOf(RandomCoordinates.getLats(46.0809952, 13.2136444, 50));
+            longs[i] = String.valueOf(RandomCoordinates.getLongs(46.0809952, 13.2136444, 50));
         }
-    */
+
+        // Enable Local Datastore.
+        Parse.enableLocalDatastore(this);
+
+        Parse.initialize(this, "NEmJNLg1Y5x6FEUfJiDOwVXEaSrOMPbew2jALpZ9", "iOetfxLpSERC1fDCqX6Uwgvw2Ps11ufpl2TYXaei");
+
+
+        for (int i=400; i<500; i++) { //come sincronizzare il processo?
+            tesiReal = new ParseObject("TesiReal");
+            tesiReal.put("ID", i);
+            tesiReal.put("Nome", randomName());
+            tesiReal.put("Cognome", randomSurname());
+            tesiReal.put("Immagine", "test");
+            tesiReal.put("Latitudine", lats[i]);
+            tesiReal.put("Longitudine", longs[i]);
+            tesiReal.put("Amici", randomAmici());
+            tesiReal.put("Online", randomAmici());
+            tesiReal.put("Accuratezza", randomNumber());
+            tesiReal.saveInBackground();
+        }
+        */
+
+
     }
 
 
@@ -126,5 +163,10 @@ public class MainActivity extends ActionBarActivity {
         } else {
             return 0;
         }
+    }
+
+    public int randomNumber() {
+        int x = (int) (100 * Math.random());
+        return x;
     }
 }

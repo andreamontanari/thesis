@@ -118,9 +118,6 @@ public class Intersection {
 
         sweepLineAlg(points);
 
-        for (int i=0; i < numIcons;i++) {
-            Log.d("RISULTATO ALG sweep: ",i + ": " + ConflictGraph.outEdges(i));
-        }
     }
 
 }

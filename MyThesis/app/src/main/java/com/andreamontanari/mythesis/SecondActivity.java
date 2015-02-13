@@ -41,6 +41,8 @@ import java.util.List;
  */
 public class SecondActivity extends Activity {
 
+    public final int numIcons = 100;
+
     LatLng latlng;
     private GoogleMap map;
     Projection projection;
@@ -99,10 +101,10 @@ public class SecondActivity extends Activity {
 
         Parse.initialize(this, "NEmJNLg1Y5x6FEUfJiDOwVXEaSrOMPbew2jALpZ9", "iOetfxLpSERC1fDCqX6Uwgvw2Ps11ufpl2TYXaei");
 
-        rects = new Interval2D[100];
-        points = new com.andreamontanari.mythesis.sweepline.Point[100];
-        people = new Person[100];
-        lats = longs = new double[100];
+        rects = new Interval2D[numIcons];
+        points = new com.andreamontanari.mythesis.sweepline.Point[numIcons];
+        people = new Person[numIcons];
+        lats = longs = new double[numIcons];
 
         /*********************************
          *Inserisco posizione utente
@@ -169,7 +171,6 @@ public class SecondActivity extends Activity {
 
 
                         points[Id] = new com.andreamontanari.mythesis.sweepline.Point(xmax, ymax, id);
-                        Log.d("PUNTO", points[Id].toString());
                         rects[Id] = new Interval2D(new Interval1D(xmax, xmin), new Interval1D(ymax, ymin), points[Id]);
                         people[Id] = new Person(name, surname, lat, lng, amici);
                     }
@@ -177,14 +178,14 @@ public class SecondActivity extends Activity {
                     Toast.makeText(SecondActivity.this, "Si è verificato un errore nella ricezione dei dati, riprovare", Toast.LENGTH_SHORT).show();
                 }
 
-                Intersection.sweepline(100, points, rects); //creo grafo dei conflitti
+                Intersection.sweepline(numIcons, points, rects); //creo grafo dei conflitti
 
 
                 Q = new ArrayList<Node>();
                 ANS = new ArrayList<Node>();
 
                 //creo la lista di tutti i nodi Q con rilevanza stabilita in base all'amicizia, grado di sovrapposizione inizializzato a 0
-                for (int i=0; i<100; i++) {
+                for (int i=0; i<numIcons; i++) {
                     Q.add(new Node(points[i].getId(), points[i], people[i].getFriends(), 0));
                     ANS.add(new Node(points[i].getId(), points[i], people[i].getFriends(), 0));
                 }
@@ -199,10 +200,9 @@ public class SecondActivity extends Activity {
                     if (ex.show) {
                         count++;
                         //inserisco me stesso (meme)
-                        LatLng coords = getGeoCoords(new Point(ex.position.getX(), ex.position.getY()));
+                        LatLng coords = new LatLng(Double.parseDouble(people[Integer.parseInt(ex.id)].lat), Double.parseDouble(people[Integer.parseInt(ex.id)].lng));
+                        //LatLng coords = getGeoCoords(new Point(ex.position.getX(), ex.position.getY()));
                         //LatLng coords = new LatLng(lats[Integer.parseInt(ex.position.getId())], longs[Integer.parseInt(ex.position.getId())]);
-                        Log.d("LATLNG", coords.toString());
-                        Log.d("PROVE di eq", ex.toString());
                         if (!ex.aggregator) {
                             map.addMarker(new MarkerOptions()
                                     .position(coords)
@@ -217,9 +217,7 @@ public class SecondActivity extends Activity {
                         }
                     }
                 }
-
-                Log.d("FINE", "FINE, "+count+" elementi mostrati su 100");
-
+                Toast.makeText(SecondActivity.this, count+" elementi mostrati su 100",Toast.LENGTH_LONG).show();
             }
 
         });
@@ -270,10 +268,4 @@ public class SecondActivity extends Activity {
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
 
-    public LatLng getGeoCoords(Point screenPosition) {
-        Projection projection = map.getProjection();
-
-        return projection.fromScreenLocation(screenPosition);
-
-    }
 }

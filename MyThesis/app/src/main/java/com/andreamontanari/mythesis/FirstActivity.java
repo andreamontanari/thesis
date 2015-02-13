@@ -100,8 +100,8 @@ public class FirstActivity extends Activity {
         final Marker myMarker = map.addMarker(new MarkerOptions()
                 .position(myPosition)
                 .title("My Position"));
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(myPosition, 18)); //muovo la camera alla posizione latlng indicata (livello zoom 18 o 19)
-
+        //map.animateCamera(CameraUpdateFactory.newLatLngZoom(myPosition, 18)); //muovo la camera alla posizione latlng indicata (livello zoom 18 o 19)
+        map.moveCamera( CameraUpdateFactory.newLatLngZoom(myPosition , 19));
         /********************************************
          *Richiedo icone da inserire al Server
          *Inserisco posizioni scaricate dal server
