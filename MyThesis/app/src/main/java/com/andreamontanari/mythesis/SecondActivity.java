@@ -27,6 +27,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -48,6 +49,8 @@ public class SecondActivity extends Activity {
     Projection projection;
     double[] lats, longs;
     Point screenPosition;
+    //ProgressBar pb;
+    View load;
 
     //sweepline
     public Interval2D[] rects;
@@ -99,6 +102,8 @@ public class SecondActivity extends Activity {
         map = mapFragment.getMap();
         map.setMyLocationEnabled(true);
 
+        //pb = (ProgressBar) findViewById(R.id.prog);
+
         Parse.initialize(this, "NEmJNLg1Y5x6FEUfJiDOwVXEaSrOMPbew2jALpZ9", "iOetfxLpSERC1fDCqX6Uwgvw2Ps11ufpl2TYXaei");
 
         rects = new Interval2D[numIcons];
@@ -123,6 +128,11 @@ public class SecondActivity extends Activity {
          *Richiedo icone da inserire al Server
          *Inserisco posizioni scaricate dal server
          *****************************************/
+
+        load = (View) findViewById(R.id.load);
+        load.setX(100);
+        load.setY(200);
+        load.setVisibility(View.VISIBLE);
 
         ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("Tesi");
         query.findInBackground(new FindCallback<ParseObject>() {
@@ -217,6 +227,7 @@ public class SecondActivity extends Activity {
                         }
                     }
                 }
+                load.setVisibility(View.INVISIBLE);
                 Toast.makeText(SecondActivity.this,  count+" elementi mostrati su "+ numIcons +" online",Toast.LENGTH_LONG).show();
             }
 

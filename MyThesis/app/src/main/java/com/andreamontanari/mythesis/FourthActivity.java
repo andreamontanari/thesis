@@ -69,6 +69,8 @@ public class FourthActivity extends Activity {
     public static List<Node> Q;
     public Person[] people;
 
+    View load;
+
     private static List<ParseObject>allObjects = new ArrayList<ParseObject>();
 
     /**
@@ -103,7 +105,7 @@ public class FourthActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_third);
+        setContentView(R.layout.activity_fourth);
 
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
@@ -131,6 +133,11 @@ public class FourthActivity extends Activity {
                 .title("My Position"));
        // map.animateCamera(CameraUpdateFactory.newLatLngZoom(myPosition, 19)); //move camera to the latLng position (18 or 19)
         map.moveCamera( CameraUpdateFactory.newLatLngZoom(myPosition , 19));
+
+        load = (View) findViewById(R.id.load);
+        load.setX(100);
+        load.setY(200);
+        load.setVisibility(View.VISIBLE);
 
         /********************************************
          *Richiedo icone da inserire al Server
@@ -162,7 +169,6 @@ public class FourthActivity extends Activity {
                     //We have a full PokeDex
                     else {
                         //USE FULL DATA AS INTENDED
-                        Log.d("PROVA", ""+list.size());
                         List<ParseObject> l = list;
                         for (ParseObject po : l) {
                                 projection = map.getProjection();
@@ -248,6 +254,7 @@ public class FourthActivity extends Activity {
                                 }
                             }
                         }
+                        load.setVisibility(View.INVISIBLE);
                         Toast.makeText(FourthActivity.this, count+" elementi mostrati su "+ numIcons +" online",Toast.LENGTH_LONG).show();
                     }
                 }
