@@ -49,7 +49,7 @@ public class ChooseActivity  extends ActionBarActivity {
     }
 
     public void startDemo(View v) {
-        Button b = (Button)v;
+        Button b = (Button) v;
         String buttonText = b.getText().toString();
         if (buttonText.equals("Demo1")) {
             Intent i = new Intent(this, FirstActivity.class);
@@ -60,10 +60,14 @@ public class ChooseActivity  extends ActionBarActivity {
             startActivity(i);
             //b.setBackground(getResources().getDrawable(R.drawable.buttonshape2));
         } else if (buttonText.equals("Demo3")) {
-           // b.setBackground(getResources().getDrawable(R.drawable.buttonshape3pressed));
+            // b.setBackground(getResources().getDrawable(R.drawable.buttonshape3pressed));
             Intent i = new Intent(this, ThirdActivity.class);
             startActivity(i);
-           // b.setBackground(getResources().getDrawable(R.drawable.buttonshape3));
+            // b.setBackground(getResources().getDrawable(R.drawable.buttonshape3));
+        } else if (buttonText.equals("Demo4")) {
+            // b.setBackground(getResources().getDrawable(R.drawable.buttonshape3pressed));
+            Intent i = new Intent(this, FourthActivity.class);
+            startActivity(i);
         }
     }
 

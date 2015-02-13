@@ -27,7 +27,7 @@
         android:layout_width="270dp"
         android:layout_height="60dp"
         android:background="@drawable/buttonshape1"
-        android:layout_marginTop="43dp"
+        android:layout_marginTop="30dp"
         android:layout_below="@+id/textView3"
         android:layout_centerHorizontal="true"
         android:onClick="startDemo"/>
@@ -43,7 +43,7 @@
         android:layout_centerVertical="true"
         android:layout_alignLeft="@+id/demo1"
         android:layout_alignStart="@+id/demo1"
-        android:layout_marginTop="75dp"
+        android:layout_marginTop="50dp"
         android:layout_below="@id/demo1"
         android:onClick="startDemo"/>
 
@@ -58,6 +58,20 @@
         android:layout_below="@+id/demo2"
         android:layout_alignLeft="@+id/demo2"
         android:layout_alignStart="@+id/demo2"
-        android:layout_marginTop="75dp"
+        android:layout_marginTop="50dp"
+        android:onClick="startDemo"/>
+
+    <Button
+        android:id="@+id/demo4"
+        android:text="Demo4"
+        android:textColor="#FFFFFF"
+        android:textSize="30sp"
+        android:layout_width="270dp"
+        android:layout_height="60dp"
+        android:background="@drawable/buttonshape4"
+        android:layout_below="@+id/demo3"
+        android:layout_alignLeft="@+id/demo3"
+        android:layout_alignStart="@+id/demo3"
+        android:layout_marginTop="50dp"
         android:onClick="startDemo"/>
 </RelativeLayout>
