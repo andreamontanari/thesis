@@ -138,7 +138,7 @@ public class ThirdActivity extends Activity {
                                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.library))); //non amico
                         }
                     }
-                    Toast.makeText(ThirdActivity.this,  numIcons+" elementi mostrati su "+ numIcons +" online",Toast.LENGTH_LONG).show();
+                    Toast.makeText(ThirdActivity.this,  numIcons+" elementi mostrati su "+ numIcons,Toast.LENGTH_LONG).show();
 
                 } else {
                     Toast.makeText(ThirdActivity.this, "Si è verificato un errore nella ricezione dei dati, riprovare", Toast.LENGTH_SHORT).show();

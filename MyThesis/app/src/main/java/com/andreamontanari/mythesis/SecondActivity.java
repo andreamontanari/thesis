@@ -40,7 +40,7 @@ import java.util.List;
  *
  *
  */
-public class SecondActivity extends Activity {
+public class SecondActivity extends Activity implements GoogleMap.OnMarkerClickListener {
 
     public final int numIcons = 100;
 
@@ -207,6 +207,7 @@ public class SecondActivity extends Activity {
                 int count = 0;
                 map.clear();
                 for (Element ex : F) {
+                    map.setOnMarkerClickListener(SecondActivity.this);
                     if (ex.show) {
                         count++;
                         //inserisco me stesso (meme)
@@ -222,7 +223,7 @@ public class SecondActivity extends Activity {
                             //inserisco l'aggregatore (quadrifoglio per ora)
                             map.addMarker(new MarkerOptions()
                                     .position(coords)
-                                    .title("Gruppo")
+                                    .title(people[Integer.parseInt(ex.id)].getCompleteName()+" "+ ex.id)
                                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.bar))); //gruppo
                         }
                     }
@@ -279,4 +280,9 @@ public class SecondActivity extends Activity {
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
 
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+
+        return false;
+    }
 }

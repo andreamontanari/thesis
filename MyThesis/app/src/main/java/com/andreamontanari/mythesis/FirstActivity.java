@@ -141,7 +141,7 @@ public class FirstActivity extends Activity {
                                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.library))); //non amico
                         }
                     }
-                    Toast.makeText(FirstActivity.this,  numIcons+" elementi mostrati su "+ numIcons +" online",Toast.LENGTH_LONG).show();
+                    Toast.makeText(FirstActivity.this,  numIcons+" elementi mostrati su "+ numIcons,Toast.LENGTH_LONG).show();
 
                 } else {
                     Toast.makeText(FirstActivity.this, "Si è verificato un errore nella ricezione dei dati, riprovare", Toast.LENGTH_SHORT).show();
