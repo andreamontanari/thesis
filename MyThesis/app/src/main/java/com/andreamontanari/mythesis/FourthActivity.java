@@ -148,6 +148,12 @@ public class FourthActivity extends Activity {
         //parseQuery.whereEqualTo("Online", 1);
         parseQuery.findInBackground(getAllObjects());
 
+        myPosition = new LatLng(46.0809952,13.2136444);
+
+        //inserisco il marker dell'utente e muovo la camera sul punto trovato
+        final Marker Marker = map.addMarker(new MarkerOptions()
+                .position(myPosition)
+                .title("La mia posizione"));
     }
 
     FindCallback getAllObjects() {
@@ -260,6 +266,7 @@ public class FourthActivity extends Activity {
                 }
             }
         };
+
     }
 
 
