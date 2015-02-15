@@ -3,6 +3,7 @@ package com.andreamontanari.mythesis;
 import com.andreamontanari.mythesis.algorithm.aggregation.Aggregation;
 import com.andreamontanari.mythesis.algorithm.aggregation.Element;
 import com.andreamontanari.mythesis.algorithm.aggregation.Node;
+import com.andreamontanari.mythesis.sweepline.ConflictGraph;
 import com.andreamontanari.mythesis.sweepline.Intersection;
 import com.andreamontanari.mythesis.sweepline.Interval1D;
 import com.andreamontanari.mythesis.sweepline.Interval2D;
@@ -62,6 +63,9 @@ public class SecondActivity extends Activity implements GoogleMap.OnMarkerClickL
     public static List<Node> ANS;
     public static List<Node> Q;
     public Person[] people;
+
+    public static List<String> aggregated;
+    public List<Person> persons;
 
     /**
      * Whether or not the system UI should be auto-hidden after
@@ -183,7 +187,7 @@ public class SecondActivity extends Activity implements GoogleMap.OnMarkerClickL
 
                         points[Id] = new com.andreamontanari.mythesis.sweepline.Point(xmax, ymax, id);
                         rects[Id] = new Interval2D(new Interval1D(xmax, xmin), new Interval1D(ymax, ymin), points[Id]);
-                        people[Id] = new Person(name, surname, lat, lng, amici, "");
+                        people[Id] = new Person(id, name, surname, lat, lng, amici, "");
                     }
                 } else {
                     Toast.makeText(SecondActivity.this, "Si è verificato un errore nella ricezione dei dati, riprovare", Toast.LENGTH_SHORT).show();
@@ -224,7 +228,7 @@ public class SecondActivity extends Activity implements GoogleMap.OnMarkerClickL
                             //inserisco l'aggregatore (quadrifoglio per ora)
                             map.addMarker(new MarkerOptions()
                                     .position(coords)
-                                    .title(people[Integer.parseInt(ex.id)].getCompleteName()+" "+ ex.id)
+                                    .title("Gruppo:" + ex.id)
                                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.bar))); //gruppo
                         }
                     }
@@ -291,9 +295,24 @@ public class SecondActivity extends Activity implements GoogleMap.OnMarkerClickL
     @Override
     public boolean onMarkerClick(Marker marker) {
 
-        Intent i = new Intent(this, ShowingActivity.class);
-        startActivity(i);
+        if (marker.getTitle().startsWith("Gruppo")) {
+            aggregated = new ArrayList<String>();
+            persons = new ArrayList<Person>();
+            for (int i=0; i<people.length; i++) {
+                persons.add(people[i]);
+            }
+            String res = marker.getTitle();
+            String[] splitted = res.split(":");
+            int elid = Integer.parseInt(splitted[1]);
+            List<Integer> adj = ConflictGraph.outEdges(elid);
+            for (Integer i : adj) {
+                String id = String.valueOf(i);
+                aggregated.add(Person.getPersonById(id, persons).getCompleteName());
+            }
 
+            Intent i = new Intent(this, ShowingActivity.class);
+            startActivity(i);
+        }
         return false;
     }
 }

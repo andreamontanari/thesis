@@ -2,6 +2,8 @@ package com.andreamontanari.mythesis.algorithm.aggregation;
 
 import com.andreamontanari.mythesis.sweepline.Point;
 
+import java.util.List;
+
 public class Element {
 	public Point position;
 	public boolean show, aggregator;
@@ -17,8 +19,18 @@ public class Element {
 		
 	}
 
+    public static Element getElementById(String id, List<Element> list) {
+        Element e = null;
+        for (Element x : list) {
+            if (x.id == id) {
+                e = x;
+                return e;
+            }
+        }
+        return e;
+    }
 
-    //CONTROLLA SHOW
+
 	public String toString() {
 		return "("+id+", "+ aggegratedWith +", "+ show +")";
 	}

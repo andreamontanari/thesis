@@ -117,7 +117,12 @@ public class Intersection {
         createEvents(numIcons, rects, points);
 
         sweepLineAlg(points);
-
+        /*
+        //stampa il grafo dei conflitti
+        for (int i=0; i < numIcons;i++) {
+            System.out.println(i+": "+ConflictGraph.outEdges(i));
+        }
+        */
     }
 
 }

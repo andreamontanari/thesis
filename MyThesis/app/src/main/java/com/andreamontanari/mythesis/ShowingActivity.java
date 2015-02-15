@@ -21,7 +21,7 @@ public class ShowingActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_showing);
 
-        // definisco un array di stringhe
+        // definisco un array di stringhe (nomi dei componenti del gruppo)
         String[] nameproducts = new String[] { "Product1", "Product2", "Product3" };
 
         // definisco un ArrayList
@@ -33,7 +33,7 @@ public class ShowingActivity extends ActionBarActivity {
         final ListView mylist = (ListView) findViewById(R.id.listView);
 
         // creo e istruisco l'adattatore
-        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listp);
+        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, FourthActivity.aggregated);
 
         // inietto i dati
         mylist.setAdapter(adapter);
