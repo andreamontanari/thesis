@@ -47,11 +47,15 @@
             android:label="@string/app_name" >
         </activity>
         <activity
+            android:name=".ThirdActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
             android:name=".FourthActivity"
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:name=".ThirdActivity"
+            android:name=".ShowingActivity"
             android:label="@string/app_name" >
         </activity>
     </application>

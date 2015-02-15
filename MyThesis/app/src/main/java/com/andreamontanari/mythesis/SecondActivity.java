@@ -21,6 +21,7 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
@@ -289,6 +290,9 @@ public class SecondActivity extends Activity implements GoogleMap.OnMarkerClickL
 
     @Override
     public boolean onMarkerClick(Marker marker) {
+
+        Intent i = new Intent(this, ShowingActivity.class);
+        startActivity(i);
 
         return false;
     }
