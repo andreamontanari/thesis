@@ -266,6 +266,13 @@ public class FourthActivity extends Activity implements GoogleMap.OnMarkerClickL
                                 }
                             }
                         }
+                        LatLng pos = new LatLng(46.0809952,13.2136444);
+
+                        //inserisco il marker dell'utente e muovo la camera sul punto trovato
+                        final Marker Marker = map.addMarker(new MarkerOptions()
+                                .position(pos)
+                                .title("La mia posizione"));
+
                         load.setVisibility(View.INVISIBLE);
                         Toast.makeText(FourthActivity.this, count+" elementi mostrati su "+ numIcons +" online",Toast.LENGTH_LONG).show();
                     }
