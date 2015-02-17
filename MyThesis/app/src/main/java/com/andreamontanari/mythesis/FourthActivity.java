@@ -110,7 +110,7 @@ public class FourthActivity extends Activity implements GoogleMap.OnMarkerClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_third);
+        setContentView(R.layout.activity_fourth);
 
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
