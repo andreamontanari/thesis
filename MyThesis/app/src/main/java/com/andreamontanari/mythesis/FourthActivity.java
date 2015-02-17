@@ -280,7 +280,6 @@ public class FourthActivity extends Activity implements GoogleMap.OnMarkerClickL
                         final Marker Marker = map.addMarker(new MarkerOptions()
                                 .position(pos)
                                 .title("My Position"));
-
                         load.setVisibility(View.INVISIBLE);
                         Toast.makeText(FourthActivity.this, count+" users displayed out of "+ 300 +" online",Toast.LENGTH_LONG).show();
                     }

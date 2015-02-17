@@ -17,14 +17,6 @@ public class ShowingFirstActivity extends ActionBarActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_showing);
 
-        // definisco un array di stringhe (nomi dei componenti del gruppo)
-        String[] nameproducts = new String[] { "Product1", "Product2", "Product3" };
-
-        // definisco un ArrayList
-        final ArrayList<String> listp = new ArrayList<String>();
-        for (int i = 0; i < nameproducts.length; ++i) {
-            listp.add(nameproducts[i]);
-        }
         // recupero la lista dal layout
         final ListView mylist = (ListView) findViewById(R.id.listView);
 
