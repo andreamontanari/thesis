@@ -8,5 +8,6 @@
     <string name="instruction1">Enable GPS first, then choose one of the following modes: </string>
     <string name="title_activity_fullscreen">FullscreenActivity</string>
     <string name="infowait">Waiting for icons...</string>
+    <string name="group">Group</string>
 
 </resources>

@@ -157,7 +157,7 @@ public class FourthActivity extends Activity implements GoogleMap.OnMarkerClickL
         //inserisco il marker dell'utente e muovo la camera sul punto trovato
         final Marker Marker = map.addMarker(new MarkerOptions()
                 .position(myPosition)
-                .title("La mia posizione"));
+                .title("My Position"));
     }
 
     FindCallback getAllObjects() {
@@ -188,9 +188,8 @@ public class FourthActivity extends Activity implements GoogleMap.OnMarkerClickL
                                 String surname = po.getString("Cognome");
                                 String lat = po.getString("Latitudine");
                                 String lng = po.getString("Longitudine");
-                                //String immagine = po.getString("Immagine"); //da aggiungere
                                 String accuracy = String.valueOf(po.getInt("Accuratezza"));
-                                //String online = String.valueOf(po.getInt("Online"));
+                                String online = String.valueOf(po.getInt("Online"));
                                 String amici = String.valueOf(po.getInt("Amici"));
 
                                 Double lt = Double.parseDouble(lat);
@@ -228,8 +227,12 @@ public class FourthActivity extends Activity implements GoogleMap.OnMarkerClickL
 
                             }
 
+                        long starts = System.currentTimeMillis();
+
                         Intersection.sweepline(numIcons, points, rects); //creo grafo dei conflitti
 
+                        long sweep = System.currentTimeMillis() - starts;
+                        Log.d("TEMPO sweep", "" + sweep);
 
                         Q = new ArrayList<Node>();
                         ANS = new ArrayList<Node>();
@@ -242,7 +245,13 @@ public class FourthActivity extends Activity implements GoogleMap.OnMarkerClickL
 
                         F = new ArrayList<Element>();
 
+                        long starta = System.currentTimeMillis();
+
                         F = Aggregation.realAggregation(1, 0, 50, ANS);
+
+                        long time = System.currentTimeMillis() - starta;
+
+                        Log.d("TEMPO aggr", "" + time);
 
                         int count = 0;
                         map.clear();
@@ -261,7 +270,7 @@ public class FourthActivity extends Activity implements GoogleMap.OnMarkerClickL
                                     //inserisco l'aggregatore (quadrifoglio per ora)
                                     map.addMarker(new MarkerOptions()
                                             .position(coords)
-                                            .title("Gruppo:"+ex.id)
+                                            .title("Group:"+ex.id)
                                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.group))); //gruppo
                                 }
                             }
@@ -271,10 +280,10 @@ public class FourthActivity extends Activity implements GoogleMap.OnMarkerClickL
                         //inserisco il marker dell'utente e muovo la camera sul punto trovato
                         final Marker Marker = map.addMarker(new MarkerOptions()
                                 .position(pos)
-                                .title("La mia posizione"));
+                                .title("My Position"));
 
                         load.setVisibility(View.INVISIBLE);
-                        Toast.makeText(FourthActivity.this, count+" elementi mostrati su "+ 300 +" online",Toast.LENGTH_LONG).show();
+                        Toast.makeText(FourthActivity.this, count+" users displayed out of "+ 300 +" online",Toast.LENGTH_LONG).show();
                     }
                 }
             }
@@ -330,7 +339,7 @@ public class FourthActivity extends Activity implements GoogleMap.OnMarkerClickL
     @Override
     public boolean onMarkerClick(Marker marker) {
 
-        if (marker.getTitle().startsWith("Gruppo")) {
+        if (marker.getTitle().startsWith("Group")) {
             aggregated = new ArrayList<String>();
             persons = new ArrayList<Person>();
             for (int i=0; i<people.length; i++) {

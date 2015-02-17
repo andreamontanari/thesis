@@ -150,7 +150,7 @@ public class ThirdActivity extends Activity {
                                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.offline))); //offline
                         }
                     }
-                    Toast.makeText(ThirdActivity.this,  numIcons+" elementi mostrati su "+ numIcons,Toast.LENGTH_LONG).show();
+                    Toast.makeText(ThirdActivity.this,  numIcons+" users displayed out of "+ numIcons,Toast.LENGTH_LONG).show();
 
                 } else {
                     Toast.makeText(ThirdActivity.this, "Si è verificato un errore nella ricezione dei dati, riprovare", Toast.LENGTH_SHORT).show();
@@ -213,7 +213,7 @@ public class ThirdActivity extends Activity {
                                         .icon(BitmapDescriptorFactory.fromResource(R.drawable.offline))); //offline
                             }
                         }
-                        Toast.makeText(ThirdActivity.this,  numIcons+" elementi mostrati su "+ numIcons,Toast.LENGTH_LONG).show();
+                        Toast.makeText(ThirdActivity.this,  numIcons+" users displayed out of "+ numIcons,Toast.LENGTH_LONG).show();
 
                     }
                 }
