@@ -4,7 +4,6 @@ import com.andreamontanari.mythesis.util.SystemUiHider;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -15,10 +14,8 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 import android.app.Activity;
-import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
@@ -133,12 +130,12 @@ public class FirstActivity extends Activity {
                             map.addMarker(new MarkerOptions()
                                     .position(latlng)
                                     .title(name + " " + surname)
-                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.quadrifoglio))); //amico
+                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.friends))); //amico
                         } else {
                             map.addMarker(new MarkerOptions()
                                     .position(latlng)
                                     .title(name + " " + surname)
-                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.library))); //non amico
+                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.notfriends))); //non amico
                         }
                     }
                     Toast.makeText(FirstActivity.this,  numIcons+" elementi mostrati su "+ numIcons,Toast.LENGTH_LONG).show();

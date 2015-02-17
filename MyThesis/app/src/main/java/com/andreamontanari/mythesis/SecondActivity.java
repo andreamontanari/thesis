@@ -26,10 +26,8 @@ import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -166,12 +164,12 @@ public class SecondActivity extends Activity implements GoogleMap.OnMarkerClickL
                             map.addMarker(new MarkerOptions()
                                     .position(latlng)
                                     .title(id)
-                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.quadrifoglio))); //amico
+                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.friends))); //amico
                         } else {
                             map.addMarker(new MarkerOptions()
                                     .position(latlng)
                                     .title(id)
-                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.library))); //non amico
+                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.notfriends))); //non amico
                         }
 
                         screenPosition = projection.toScreenLocation(latlng);
@@ -223,13 +221,13 @@ public class SecondActivity extends Activity implements GoogleMap.OnMarkerClickL
                             map.addMarker(new MarkerOptions()
                                     .position(coords)
                                     .title(people[Integer.parseInt(ex.id)].getCompleteName())
-                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.library)));    //singolo
+                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.friends)));    //singolo
                         } else {
                             //inserisco l'aggregatore (quadrifoglio per ora)
                             map.addMarker(new MarkerOptions()
                                     .position(coords)
                                     .title("Gruppo:" + ex.id)
-                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.bar))); //gruppo
+                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.group))); //gruppo
                         }
                     }
                 }
@@ -310,7 +308,7 @@ public class SecondActivity extends Activity implements GoogleMap.OnMarkerClickL
                 aggregated.add(Person.getPersonById(id, persons).getCompleteName());
             }
 
-            Intent i = new Intent(this, ShowingActivity.class);
+            Intent i = new Intent(this, ShowingFirstActivity.class);
             startActivity(i);
         }
         return false;

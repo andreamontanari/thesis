@@ -56,12 +56,12 @@ public class MainActivity extends ActionBarActivity {
             tesi.saveInBackground();
         }*/
 
-        /*
 
+        /*
         //CODICE PER INIZIALIZZARE DB demo3
         for (int i=0; i<1000; i++) {
-            lats[i] = String.valueOf(RandomCoordinates.getLats(46.0809952, 13.2136444, 50));
-            longs[i] = String.valueOf(RandomCoordinates.getLongs(46.0809952, 13.2136444, 50));
+            lats[i] = String.valueOf(RandomCoordinates.getLats(46.0809952, 13.2136444, 60));
+            longs[i] = String.valueOf(RandomCoordinates.getLongs(46.0809952, 13.2136444, 60));
         }
 
         // Enable Local Datastore.
@@ -70,7 +70,7 @@ public class MainActivity extends ActionBarActivity {
         Parse.initialize(this, "NEmJNLg1Y5x6FEUfJiDOwVXEaSrOMPbew2jALpZ9", "iOetfxLpSERC1fDCqX6Uwgvw2Ps11ufpl2TYXaei");
 
 
-        for (int i=200; i<300; i++) { //come sincronizzare il processo?
+        for (int i=400; i<500; i++) { //come sincronizzare il processo?
             tesiReal = new ParseObject("TesiReal");
             tesiReal.put("ID", i);
             tesiReal.put("Nome", randomName());
@@ -79,11 +79,12 @@ public class MainActivity extends ActionBarActivity {
             tesiReal.put("Latitudine", lats[i]);
             tesiReal.put("Longitudine", longs[i]);
             tesiReal.put("Amici", randomAmici());
-            tesiReal.put("Online", "1");
+            tesiReal.put("Online", "0");
             tesiReal.put("Accuratezza", randomNumber());
             tesiReal.saveInBackground();
         }
         */
+
     }
 
 

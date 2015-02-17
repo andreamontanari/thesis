@@ -23,6 +23,7 @@ import com.parse.ParseQuery;
 import org.json.JSONArray;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -43,7 +44,9 @@ public class ThirdActivity extends Activity {
     LatLng coords;
     private Marker myMarker;
     private GoogleMap map;
-    int numIcons = 300;
+    int numIcons = 500;
+
+    private static List<ParseObject>allObjects = new ArrayList<ParseObject>();
 
     /**
      * Whether or not the system UI should be auto-hidden after
@@ -105,6 +108,10 @@ public class ThirdActivity extends Activity {
          *Inserisco posizioni scaricate dal server
          *****************************************/
 
+        final ParseQuery parseQuery = new ParseQuery("TesiReal");
+        parseQuery.setLimit(numIcons);
+        parseQuery.findInBackground(getAllObjects());
+
         ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("TesiReal");
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
@@ -118,24 +125,29 @@ public class ThirdActivity extends Activity {
                         String surname = po.getString("Cognome");
                         String lat = po.getString("Latitudine");
                         String lng = po.getString("Longitudine");
-                        String immagine = po.getString("Immagine"); //da aggiungere
                         String amici = String.valueOf(po.getInt("Amici"));
+                        String online = String.valueOf(po.getInt("Online"));
 
                         Double lt = Double.parseDouble(lat);
                         Double ln = Double.parseDouble(lng);
 
                         latlng = new LatLng(lt, ln);
 
-                        if (amici.equals("1")) {
+                        if (amici.equals("1") && online.equals("1") ) {
                             map.addMarker(new MarkerOptions()
                                     .position(latlng)
                                     .title(name + " " + surname)
-                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.quadrifoglio))); //amico
+                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.friends))); //amico
+                        } else if (amici.equals("0") && online.equals("1")) {
+                            map.addMarker(new MarkerOptions()
+                                    .position(latlng)
+                                    .title(name + " " + surname)
+                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.notfriends))); //non amico
                         } else {
                             map.addMarker(new MarkerOptions()
                                     .position(latlng)
                                     .title(name + " " + surname)
-                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.library))); //non amico
+                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.offline))); //offline
                         }
                     }
                     Toast.makeText(ThirdActivity.this,  numIcons+" elementi mostrati su "+ numIcons,Toast.LENGTH_LONG).show();
@@ -147,6 +159,66 @@ public class ThirdActivity extends Activity {
         });
 
 
+    }
+
+
+    FindCallback getAllObjects() {
+        return new FindCallback() {
+            @Override
+            public void done(List list, com.parse.ParseException e) {
+                if (e == null) {
+
+                    allObjects.addAll(list);
+                    int skip = 0;
+                    int limit = 1000;
+                    if (list.size() == limit) {
+                        skip = skip + limit;
+                        ParseQuery query = new ParseQuery("TesiReal");
+                        query.setSkip(skip);
+                        query.setLimit(limit);
+                        query.findInBackground(getAllObjects());
+                    }
+                    //We have a full PokeDex
+                    else {
+                        //USE FULL DATA AS INTENDED
+                        List<ParseObject> l = list;
+                        for (ParseObject po : l) {
+                            String id = String.valueOf(po.getInt("ID"));
+                            String name = po.getString("Nome");
+                            String surname = po.getString("Cognome");
+                            String lat = po.getString("Latitudine");
+                            String lng = po.getString("Longitudine");
+                            String online = po.getString("Online");
+                            String amici = String.valueOf(po.getInt("Amici"));
+
+                            Double lt = Double.parseDouble(lat);
+                            Double ln = Double.parseDouble(lng);
+
+                            latlng = new LatLng(lt, ln);
+
+                            if (amici.equals("1") && online.equals("1") ) {
+                                map.addMarker(new MarkerOptions()
+                                        .position(latlng)
+                                        .title(name + " " + surname)
+                                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.friends))); //amico
+                            } else if (amici.equals("0") && online.equals("1")) {
+                                map.addMarker(new MarkerOptions()
+                                        .position(latlng)
+                                        .title(name + " " + surname)
+                                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.notfriends))); //non amico
+                            } else {
+                                map.addMarker(new MarkerOptions()
+                                        .position(latlng)
+                                        .title(name + " " + surname)
+                                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.offline))); //offline
+                            }
+                        }
+                        Toast.makeText(ThirdActivity.this,  numIcons+" elementi mostrati su "+ numIcons,Toast.LENGTH_LONG).show();
+
+                    }
+                }
+            }
+        };
     }
 
     @Override

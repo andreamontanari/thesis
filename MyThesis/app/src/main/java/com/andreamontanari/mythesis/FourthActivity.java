@@ -53,7 +53,7 @@ public class FourthActivity extends Activity implements GoogleMap.OnMarkerClickL
     int code;
     LatLng coords;
     private Marker myMarker;
-    public final int numIcons = 300;
+    public final int numIcons = 500;
 
     LatLng latlng;
     private GoogleMap map;
@@ -110,18 +110,13 @@ public class FourthActivity extends Activity implements GoogleMap.OnMarkerClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_fourth);
+        setContentView(R.layout.activity_third);
 
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
 
         map = mapFragment.getMap();
         map.setMyLocationEnabled(true);
-
-        rects = new Interval2D[numIcons];
-        points = new com.andreamontanari.mythesis.sweepline.Point[numIcons];
-        people = new Person[numIcons];
-        lats = longs = new double[numIcons];
 
         Parse.initialize(this, "NEmJNLg1Y5x6FEUfJiDOwVXEaSrOMPbew2jALpZ9", "iOetfxLpSERC1fDCqX6Uwgvw2Ps11ufpl2TYXaei");
 
@@ -144,13 +139,17 @@ public class FourthActivity extends Activity implements GoogleMap.OnMarkerClickL
         load.setY(200);
         load.setVisibility(View.VISIBLE);
 
+        rects = new Interval2D[numIcons];
+        points = new com.andreamontanari.mythesis.sweepline.Point[numIcons];
+        people = new Person[numIcons];
+        lats = longs = new double[numIcons];
+
         /********************************************
          *Richiedo icone da inserire al Server
          *Inserisco posizioni scaricate dal server
          *****************************************/
         final ParseQuery parseQuery = new ParseQuery("TesiReal");
         parseQuery.setLimit(numIcons);
-        //parseQuery.whereEqualTo("Online", 1);
         parseQuery.findInBackground(getAllObjects());
 
         myPosition = new LatLng(46.0809952,13.2136444);
@@ -200,24 +199,25 @@ public class FourthActivity extends Activity implements GoogleMap.OnMarkerClickL
 
                                 latlng = new LatLng(lt, ln);
 
+
                                 if (amici.equals("1")) {
                                     map.addMarker(new MarkerOptions()
                                             .position(latlng)
                                             .title(id)
-                                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.quadrifoglio))); //amico
+                                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.friends))); //amico
                                 } else {
                                     map.addMarker(new MarkerOptions()
                                             .position(latlng)
                                             .title(id)
-                                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.library))); //non amico
+                                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.notfriends))); //non amico
                                 }
 
                                 screenPosition = projection.toScreenLocation(latlng);
 
                                 int xmin = screenPosition.x;
                                 int ymin = screenPosition.y;
-                                int xmax = xmin - 100;
-                                int ymax = ymin - 100;
+                                int xmax = xmin - 120;
+                                int ymax = ymin - 120;
 
                                 lats[Id] = lt;
                                 longs[Id] = ln;
@@ -256,13 +256,13 @@ public class FourthActivity extends Activity implements GoogleMap.OnMarkerClickL
                                     map.addMarker(new MarkerOptions()
                                             .position(coords)
                                             .title(people[Integer.parseInt(ex.id)].getCompleteName())
-                                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.library)));    //singolo
+                                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.friends)));    //singolo
                                 } else {
                                     //inserisco l'aggregatore (quadrifoglio per ora)
                                     map.addMarker(new MarkerOptions()
                                             .position(coords)
                                             .title("Gruppo:"+ex.id)
-                                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.bar))); //gruppo
+                                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.group))); //gruppo
                                 }
                             }
                         }
@@ -274,7 +274,7 @@ public class FourthActivity extends Activity implements GoogleMap.OnMarkerClickL
                                 .title("La mia posizione"));
 
                         load.setVisibility(View.INVISIBLE);
-                        Toast.makeText(FourthActivity.this, count+" elementi mostrati su "+ numIcons +" online",Toast.LENGTH_LONG).show();
+                        Toast.makeText(FourthActivity.this, count+" elementi mostrati su "+ 300 +" online",Toast.LENGTH_LONG).show();
                     }
                 }
             }
