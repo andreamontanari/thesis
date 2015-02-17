@@ -27,8 +27,7 @@ import java.util.List;
 
 
 /**
- * An example full-screen activity that shows and hides the system UI (i.e.
- * status bar and navigation/system bar) with user interaction.
+ * Prima demo dell'esperimento - caso semplice con un solo attributo di rilevanza (no algoritmi)
  *
  * @see SystemUiHider
  */

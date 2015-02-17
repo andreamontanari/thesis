@@ -141,6 +141,7 @@ public class Aggregation {
 		return S;
 	}
 
+    //metodo per demo4 -- caso realistico
     //calcola la lista di nodi da inserire -- gt : grade Threshold , rt : relevance Threshold
     public static List<Element> minAggregation(double gt, int rt, int acct, List<Node> ANS) {
 

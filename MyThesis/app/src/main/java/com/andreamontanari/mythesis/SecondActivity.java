@@ -3,10 +3,10 @@ package com.andreamontanari.mythesis;
 import com.andreamontanari.mythesis.algorithm.aggregation.Aggregation;
 import com.andreamontanari.mythesis.algorithm.aggregation.Element;
 import com.andreamontanari.mythesis.algorithm.aggregation.Node;
-import com.andreamontanari.mythesis.sweepline.ConflictGraph;
-import com.andreamontanari.mythesis.sweepline.Intersection;
-import com.andreamontanari.mythesis.sweepline.Interval1D;
-import com.andreamontanari.mythesis.sweepline.Interval2D;
+import com.andreamontanari.mythesis.algorithm.sweepline.ConflictGraph;
+import com.andreamontanari.mythesis.algorithm.sweepline.Intersection;
+import com.andreamontanari.mythesis.algorithm.sweepline.Interval1D;
+import com.andreamontanari.mythesis.algorithm.sweepline.Interval2D;
 import com.andreamontanari.mythesis.util.SystemUiHider;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -37,7 +37,7 @@ import java.util.List;
 
 /**
  *
- *Versione algoritmo client-side
+ *Seconda demo dell'esperimento - caso semplice con un solo attributo di rilevanza (versione algoritmo client-side)
  *
  *
  */
@@ -50,12 +50,11 @@ public class SecondActivity extends Activity implements GoogleMap.OnMarkerClickL
     Projection projection;
     double[] lats, longs;
     Point screenPosition;
-    //ProgressBar pb;
     View load;
 
     //sweepline
     public Interval2D[] rects;
-    public com.andreamontanari.mythesis.sweepline.Point[] points;
+    public com.andreamontanari.mythesis.algorithm.sweepline.Point[] points;
 
      //min-max aggregation
     public static List<Element> F;
@@ -63,6 +62,7 @@ public class SecondActivity extends Activity implements GoogleMap.OnMarkerClickL
     public static List<Node> Q;
     public Person[] people;
 
+    //onmarkerclick
     public static List<String> aggregated;
     public List<Person> persons;
 
@@ -98,20 +98,22 @@ public class SecondActivity extends Activity implements GoogleMap.OnMarkerClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //carico la struttura statica dell'interfaccia dal file conenuto in res/layout/activity_second.xml
         setContentView(R.layout.activity_second);
 
+        //recupero il mapfragment che contiene l'oggetto GoogleMap
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
 
         map = mapFragment.getMap();
         map.setMyLocationEnabled(true);
 
-        //pb = (ProgressBar) findViewById(R.id.prog);
-
+        //inizializzo la libreria Parse
         Parse.initialize(this, "NEmJNLg1Y5x6FEUfJiDOwVXEaSrOMPbew2jALpZ9", "iOetfxLpSERC1fDCqX6Uwgvw2Ps11ufpl2TYXaei");
 
+        //dichiarazione delle liste ausiliarie
         rects = new Interval2D[numIcons];
-        points = new com.andreamontanari.mythesis.sweepline.Point[numIcons];
+        points = new com.andreamontanari.mythesis.algorithm.sweepline.Point[numIcons];
         people = new Person[numIcons];
         lats = longs = new double[numIcons];
 
@@ -133,32 +135,35 @@ public class SecondActivity extends Activity implements GoogleMap.OnMarkerClickL
          *Inserisco posizioni scaricate dal server
          *****************************************/
 
+        //aggiungo la finestra di caricamento fino a quando la computazione non è terminata
         load = (View) findViewById(R.id.load);
         load.setX(100);
         load.setY(200);
         load.setVisibility(View.VISIBLE);
 
+        //eseguo la query (SELECT * FROM Tesi)
         ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("Tesi");
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> parseObjects, com.parse.ParseException e) {
                 if (e == null) {
-                    // your logic here
                     for (ParseObject po : parseObjects) {
+                        //recupero la proiezione della mappa sul display fisico del display
                         projection = map.getProjection();
 
+                        //recupero tutti gli attributi degli utenti caricati in Tesi
                         String id = String.valueOf(po.getInt("ID"));
                         String name = po.getString("Nome");
                         String surname = po.getString("Cognome");
                         String lat = po.getString("Latitudine");
                         String lng = po.getString("Longitudine");
-                        String immagine = po.getString("Immagine"); //da aggiungere
                         String amici = String.valueOf(po.getInt("Amici"));
 
                         Double lt = Double.parseDouble(lat);
                         Double ln = Double.parseDouble(lng);
                         int Id = Integer.parseInt(id);
 
+                        //inizializzo l'oggetto LatLng con le coordinate geografiche dell'utente trovato
                         latlng = new LatLng(lt, ln);
 
                         if (amici.equals("1")) {
@@ -173,6 +178,7 @@ public class SecondActivity extends Activity implements GoogleMap.OnMarkerClickL
                                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.notfriends))); //non amico
                         }
 
+                        //recupero le coordinate spaziali relative al display del punto sulla mappa
                         screenPosition = projection.toScreenLocation(latlng);
 
                         int xmin = screenPosition.x;
@@ -180,11 +186,10 @@ public class SecondActivity extends Activity implements GoogleMap.OnMarkerClickL
                         int xmax = xmin - 100;
                         int ymax = ymin - 100;
 
+                        //inizializzo gli array ausiliari per i due algoritmi
                         lats[Id] = lt;
                         longs[Id] = ln;
-
-
-                        points[Id] = new com.andreamontanari.mythesis.sweepline.Point(xmax, ymax, id);
+                        points[Id] = new com.andreamontanari.mythesis.algorithm.sweepline.Point(xmax, ymax, id);
                         rects[Id] = new Interval2D(new Interval1D(xmax, xmin), new Interval1D(ymax, ymin), points[Id]);
                         people[Id] = new Person(id, name, surname, lat, lng, amici, "");
                     }
@@ -222,17 +227,13 @@ public class SecondActivity extends Activity implements GoogleMap.OnMarkerClickL
                     map.setOnMarkerClickListener(SecondActivity.this);
                     if (ex.show) {
                         count++;
-                        //inserisco me stesso (meme)
                         LatLng coords = new LatLng(Double.parseDouble(people[Integer.parseInt(ex.id)].lat), Double.parseDouble(people[Integer.parseInt(ex.id)].lng));
-                        //LatLng coords = getGeoCoords(new Point(ex.position.getX(), ex.position.getY()));
-                        //LatLng coords = new LatLng(lats[Integer.parseInt(ex.position.getId())], longs[Integer.parseInt(ex.position.getId())]);
-                        if (!ex.aggregator) {
+                        if (!ex.aggregator) { // se non è un aggregatore
                             map.addMarker(new MarkerOptions()
                                     .position(coords)
                                     .title(people[Integer.parseInt(ex.id)].getCompleteName())
                                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.friends)));    //singolo
-                        } else {
-                            //inserisco l'aggregatore (quadrifoglio per ora)
+                        } else { //se ex è un aggregatore
                             map.addMarker(new MarkerOptions()
                                     .position(coords)
                                     .title("Group:" + ex.id)
@@ -240,12 +241,13 @@ public class SecondActivity extends Activity implements GoogleMap.OnMarkerClickL
                         }
                     }
                 }
-                load.setVisibility(View.INVISIBLE);
+                load.setVisibility(View.INVISIBLE); //nascondo la finestra di caricamento
                 Toast.makeText(SecondActivity.this,  count+" users displayed out of "+ numIcons +" online",Toast.LENGTH_LONG).show();
             }
 
         });
 
+        //aggiungo il punto in cui mi trovo
         myPosition = new LatLng(46.0809952,13.2136444);
 
         //inserisco il marker dell'utente e muovo la camera sul punto trovato
@@ -299,19 +301,20 @@ public class SecondActivity extends Activity implements GoogleMap.OnMarkerClickL
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
 
+    //funzione del MarkerListener che prende i membri del gruppo per visualizzarli in una nuova activity (ShowingFirstActivity)
     @Override
     public boolean onMarkerClick(Marker marker) {
 
         if (marker.getTitle().startsWith("Group")) {
             aggregated = new ArrayList<String>();
             persons = new ArrayList<Person>();
-            for (int i=0; i<people.length; i++) {
+            for (int i=0; i<people.length; i++) { //inizializzo persons con tutte le persone contenute nella lista people
                 persons.add(people[i]);
             }
             String res = marker.getTitle();
             String[] splitted = res.split(":");
             int elid = Integer.parseInt(splitted[1]);
-            List<Integer> adj = ConflictGraph.outEdges(elid);
+            List<Integer> adj = ConflictGraph.outEdges(elid); //recupero la lista di nodi adiacenti al nodo con id elid
             for (Integer i : adj) {
                 String id = String.valueOf(i);
                 aggregated.add(Person.getPersonById(id, persons).getCompleteName());

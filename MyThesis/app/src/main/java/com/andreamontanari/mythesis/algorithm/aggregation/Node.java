@@ -12,6 +12,9 @@ public class Node {
 	public int degree;
     public int accuracy;
 
+    //costruttore della classe Node, utilizzata in Aggregation
+    //relevance parametro chiave nella scelta dell'aggregatore (come accuracy)
+    //degree indica il grado di sovrapposzione
     public Node(String id, Point position, int relevance, int degree, int accuracy) {
         this.id = id;
         this.position = position;
@@ -23,7 +26,8 @@ public class Node {
     public String toString() {
 		return id;
 	}
-	
+
+    //dato un id e una lista, restituisce il nodo con tale id presente nella lista
 	public static Node getNode(String id, List<Node> list) {
 		Node n = null;
 		for (int i = 0; i<list.size(); i++) {
@@ -34,8 +38,5 @@ public class Node {
 		}
 		return n;
 	}
-	
-	
-	
-	
+
 }

@@ -11,6 +11,8 @@ import android.widget.Button;
 /**
  * Created by andreamontanari on 09/02/15.
  */
+
+//attivita' nella quale l'utente sceglie quale demo avviare
 public class ChooseActivity  extends ActionBarActivity {
 
     @Override
@@ -48,24 +50,20 @@ public class ChooseActivity  extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    //metodo che al click di uno dei 4 pulsanti avvia la demo selezionata
     public void startDemo(View v) {
         Button b = (Button) v;
         String buttonText = b.getText().toString();
         if (buttonText.equals("Demo1")) {
             Intent i = new Intent(this, FirstActivity.class);
             startActivity(i);
-            //b.setBackground(getResources().getDrawable(R.drawable.buttonshape1));
         } else if (buttonText.equals("Demo2")) {
             Intent i = new Intent(this, SecondActivity.class);
             startActivity(i);
-            //b.setBackground(getResources().getDrawable(R.drawable.buttonshape2));
         } else if (buttonText.equals("Demo3")) {
-            // b.setBackground(getResources().getDrawable(R.drawable.buttonshape3pressed));
             Intent i = new Intent(this, ThirdActivity.class);
             startActivity(i);
-            // b.setBackground(getResources().getDrawable(R.drawable.buttonshape3));
         } else if (buttonText.equals("Demo4")) {
-            // b.setBackground(getResources().getDrawable(R.drawable.buttonshape3pressed));
             Intent i = new Intent(this, FourthActivity.class);
             startActivity(i);
         }
