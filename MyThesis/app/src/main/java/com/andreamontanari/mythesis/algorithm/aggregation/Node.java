@@ -1,6 +1,6 @@
 package com.andreamontanari.mythesis.algorithm.aggregation;
 
-import com.andreamontanari.mythesis.sweepline.Point;
+import com.andreamontanari.mythesis.algorithm.sweepline.Point;
 
 import java.util.List;
 

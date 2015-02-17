@@ -2,8 +2,8 @@ package com.andreamontanari.mythesis.algorithm.aggregation;
 
 import android.util.Log;
 
-import com.andreamontanari.mythesis.sweepline.ConflictGraph;
-import com.andreamontanari.mythesis.sweepline.Intersection;
+import com.andreamontanari.mythesis.algorithm.sweepline.ConflictGraph;
+import com.andreamontanari.mythesis.algorithm.sweepline.Intersection;
 
 import java.util.ArrayList;
 import java.util.EventListener;

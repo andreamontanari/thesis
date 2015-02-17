@@ -3,10 +3,9 @@ package com.andreamontanari.mythesis;
 import com.andreamontanari.mythesis.algorithm.aggregation.Aggregation;
 import com.andreamontanari.mythesis.algorithm.aggregation.Element;
 import com.andreamontanari.mythesis.algorithm.aggregation.Node;
-import com.andreamontanari.mythesis.sweepline.ConflictGraph;
-import com.andreamontanari.mythesis.sweepline.Intersection;
-import com.andreamontanari.mythesis.sweepline.Interval1D;
-import com.andreamontanari.mythesis.sweepline.Interval2D;
+import com.andreamontanari.mythesis.algorithm.sweepline.ConflictGraph;
+import com.andreamontanari.mythesis.algorithm.sweepline.Interval1D;
+import com.andreamontanari.mythesis.algorithm.sweepline.Interval2D;
 import com.andreamontanari.mythesis.util.SystemUiHider;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -63,7 +62,7 @@ public class FourthActivity extends Activity implements GoogleMap.OnMarkerClickL
 
     //sweepline
     public Interval2D[] rects;
-    public com.andreamontanari.mythesis.sweepline.Point[] points;
+    public com.andreamontanari.mythesis.algorithm.sweepline.Point[] points;
 
     //min-max aggregation
     public static List<Element> F;
@@ -140,7 +139,7 @@ public class FourthActivity extends Activity implements GoogleMap.OnMarkerClickL
         load.setVisibility(View.VISIBLE);
 
         rects = new Interval2D[numIcons];
-        points = new com.andreamontanari.mythesis.sweepline.Point[numIcons];
+        points = new com.andreamontanari.mythesis.algorithm.sweepline.Point[numIcons];
         people = new Person[numIcons];
         lats = longs = new double[numIcons];
 
@@ -221,7 +220,7 @@ public class FourthActivity extends Activity implements GoogleMap.OnMarkerClickL
                                 lats[Id] = lt;
                                 longs[Id] = ln;
 
-                                points[Id] = new com.andreamontanari.mythesis.sweepline.Point(xmax, ymax, id);
+                                points[Id] = new com.andreamontanari.mythesis.algorithm.sweepline.Point(xmax, ymax, id);
                                 rects[Id] = new Interval2D(new Interval1D(xmax, xmin), new Interval1D(ymax, ymin), points[Id]);
                                 people[Id] = new Person(id, name, surname, lat, lng, amici, accuracy);
 
@@ -229,7 +228,7 @@ public class FourthActivity extends Activity implements GoogleMap.OnMarkerClickL
 
                         long starts = System.currentTimeMillis();
 
-                        Intersection.sweepline(numIcons, points, rects); //creo grafo dei conflitti
+                        com.andreamontanari.mythesis.algorithm.sweepline.Intersection.sweepline(numIcons, points, rects); //creo grafo dei conflitti
 
                         long sweep = System.currentTimeMillis() - starts;
                         Log.d("TEMPO sweep", "" + sweep);

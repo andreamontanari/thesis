@@ -1,4 +1,4 @@
-package com.andreamontanari.mythesis.sweepline;
+package com.andreamontanari.mythesis.algorithm.sweepline;
 
 import android.util.Log;
 

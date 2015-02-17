@@ -1,5 +1,4 @@
-package com.andreamontanari.mythesis.sweepline;
-
+package com.andreamontanari.mythesis.algorithm.sweepline;
 
 //Implementazione di un intervallo a 2 dimensioni con coordinate intere
 public class Interval2D { 

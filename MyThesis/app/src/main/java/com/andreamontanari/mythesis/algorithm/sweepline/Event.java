@@ -1,4 +1,4 @@
-package com.andreamontanari.mythesis.sweepline;
+package com.andreamontanari.mythesis.algorithm.sweepline;
 
 public class Event implements Comparable<Event> {
     int time;

@@ -1,5 +1,4 @@
-package com.andreamontanari.mythesis.sweepline;
-
+package com.andreamontanari.mythesis.algorithm.sweepline;
 
 /*************************************************************************
  *  Compilation:  javac MinPQ.java
