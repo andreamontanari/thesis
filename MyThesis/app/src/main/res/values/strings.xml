@@ -8,5 +8,11 @@
     <string name="title_activity_fullscreen">FullscreenActivity</string>
     <string name="infowait">Waiting for icons...</string>
     <string name="group">Group</string>
+    <string name="about">About</string>
+    <string name="mailinfo">Information</string>
+    <string name="mailerr">There are no email clients installed.</string>
+    <string name="weberr1">No application can handle this request,</string>
+    <string name="weberr2"> Please install a web browser</string>
+    <string name="info">Information window</string>
 
 </resources>

@@ -62,6 +62,10 @@
             android:name=".ShowingActivity"
             android:label="@string/group" >
         </activity>
+        <activity
+            android:name=".InformationActivity"
+            android:label="@string/info" >
+        </activity>
     </application>
 
 </manifest>

@@ -35,19 +35,15 @@ public class ChooseActivity  extends ActionBarActivity {
         return true;
     }
 
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                showInfo();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     //metodo che al click di uno dei 4 pulsanti avvia la demo selezionata
@@ -67,6 +63,11 @@ public class ChooseActivity  extends ActionBarActivity {
             Intent i = new Intent(this, FourthActivity.class);
             startActivity(i);
         }
+    }
+
+    public void showInfo() {
+        Intent intent = new Intent(this, InformationActivity.class);
+        startActivity(intent);
     }
 
 }
