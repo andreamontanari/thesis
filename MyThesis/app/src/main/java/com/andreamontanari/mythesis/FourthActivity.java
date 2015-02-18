@@ -58,7 +58,7 @@ public class FourthActivity extends Activity implements GoogleMap.OnMarkerClickL
     public com.andreamontanari.mythesis.algorithm.sweepline.Point[] points;
 
     //min-max aggregation
-    public static List<Element> F;
+    public static List<Element> F, Fprimo;
     public static List<Node> ANS;
     public static List<Node> Q;
     public Person[] people;
@@ -245,6 +245,7 @@ public class FourthActivity extends Activity implements GoogleMap.OnMarkerClickL
                         }
 
                         F = new ArrayList<Element>();
+                        Fprimo = new ArrayList<Element>();
 
                         long starta = System.currentTimeMillis();
 
@@ -253,6 +254,8 @@ public class FourthActivity extends Activity implements GoogleMap.OnMarkerClickL
                         long time = System.currentTimeMillis() - starta;
 
                         Log.d("TEMPO aggr", "" + time);
+
+                      //  Fprimo = Aggregation.aggregation(1, 0, ANS);
 
                         int count = 0;
                         map.clear();
@@ -281,7 +284,7 @@ public class FourthActivity extends Activity implements GoogleMap.OnMarkerClickL
                                 .position(pos)
                                 .title("My Position"));
                         load.setVisibility(View.INVISIBLE);//nascondo la finestra di caricamento
-                        Toast.makeText(FourthActivity.this, count+" users displayed out of "+ 300 +" online",Toast.LENGTH_LONG).show();
+                        Toast.makeText(FourthActivity.this, count+" users displayed out of "+ numIcons +" online",Toast.LENGTH_LONG).show();
                     }
                 }
             }

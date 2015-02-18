@@ -159,7 +159,7 @@ public class Aggregation {
 
             while (ANS.size() > 0) {	//O(N)
                 Node n = getMaxDegNode(ANS); //recupero il nodo con grado di sovrapposizione massimo  -- O(N)
-                if (n.degree > gt && n.relevance > rt && n.accuracy > acct) {
+                if (n.degree > gt  && n.relevance > rt && n.accuracy > acct) {
                     //Aggiungo il nodo aggregatore n alla lista di output S
                     Element e = new Element(n.id, n.position, true, true, n);
                     S.add(e);		//O(1)
@@ -177,17 +177,17 @@ public class Aggregation {
                         }
                     }
                     ANS.remove(n);
-                } else {
-                    if (n.accuracy > acct) {
+                } else if (n.accuracy > acct) {
                         Element e = new Element(n.id, n.position, true, false, n);
                         S.add(e);        //O(1)
                         ANS.remove(n);
                     } else {
                         ANS.remove(n);
                     }
+
                 }
             }
-        }
+/*
         int co = 0;
         for (Element e : S) {
             if (e.show) {
@@ -195,6 +195,7 @@ public class Aggregation {
             }
 
         }
+        */
         return S;
     }
 

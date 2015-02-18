@@ -46,7 +46,6 @@ public class InformationActivity extends ActionBarActivity {
                     + R.string.weberr2,  Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
-
     }
 
     public void visitUniud(View v) {
