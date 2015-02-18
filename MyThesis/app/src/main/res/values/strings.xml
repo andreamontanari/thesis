@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">MyThesis</string>
-
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="welcome">Welcome in my thesis app.</string>
