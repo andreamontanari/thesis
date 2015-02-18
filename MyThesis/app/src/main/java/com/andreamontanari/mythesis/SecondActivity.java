@@ -228,7 +228,7 @@ public class SecondActivity extends Activity implements GoogleMap.OnMarkerClickL
                     if (ex.show) {
                         count++;
                         LatLng coords = new LatLng(Double.parseDouble(people[Integer.parseInt(ex.id)].lat), Double.parseDouble(people[Integer.parseInt(ex.id)].lng));
-                        if (!ex.aggregator) { // se non è un aggregatore
+                        if (!ex.aggregator) { // se ex non è un aggregatore
                             map.addMarker(new MarkerOptions()
                                     .position(coords)
                                     .title(people[Integer.parseInt(ex.id)].getCompleteName())

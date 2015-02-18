@@ -5,6 +5,8 @@ import java.util.List;
 /**
  * Created by andreamontanari on 12/02/15.
  */
+
+//classe contenitore di informazioni legate alle tuple del DB Parse
 public class Person {
     String id;
     String nome;
@@ -23,6 +25,12 @@ public class Person {
         this.amici = amici;
         this.accuratezza = accuratezza;
     }
+
+    /*
+    *
+    *funzioni getter per recuperare la relazione di amicizia, il nome completo, l'accuratezza della posizione e la persona (dato un id e una lista)
+    *
+     */
 
     public int getFriends() {
         return Integer.parseInt(amici);

@@ -39,19 +39,12 @@ import java.util.List;
 
 /**
  *
- *Versione algoritmo server-side
+ *Quarta demo dell'esperimento - caso realistico con più attributi di rilevanza (versione algoritmo client-side)
  *
  *
  */
 public class FourthActivity extends Activity implements GoogleMap.OnMarkerClickListener {
 
-    JSONArray jsonArray;
-    InputStream is = null;
-    String result = null;
-    String line = null;
-    int code;
-    LatLng coords;
-    private Marker myMarker;
     public final int numIcons = 500;
 
     LatLng latlng;
@@ -109,14 +102,17 @@ public class FourthActivity extends Activity implements GoogleMap.OnMarkerClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //carico la struttura statica dell'interfaccia dal file conenuto in res/layout/activity_fourth.xml
         setContentView(R.layout.activity_fourth);
 
+        //recupero il mapfragment che contiene l'oggetto GoogleMap
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
 
         map = mapFragment.getMap();
         map.setMyLocationEnabled(true);
 
+        //inizializzo la libreria Parse
         Parse.initialize(this, "NEmJNLg1Y5x6FEUfJiDOwVXEaSrOMPbew2jALpZ9", "iOetfxLpSERC1fDCqX6Uwgvw2Ps11ufpl2TYXaei");
 
         /*********************************
@@ -133,11 +129,13 @@ public class FourthActivity extends Activity implements GoogleMap.OnMarkerClickL
        // map.animateCamera(CameraUpdateFactory.newLatLngZoom(myPosition, 19)); //move camera to the latLng position (18 or 19)
         map.moveCamera( CameraUpdateFactory.newLatLngZoom(myPosition , 19));
 
+        //aggiungo la finestra di caricamento fino a quando la computazione non è terminata
         load = (View) findViewById(R.id.load);
         load.setX(100);
         load.setY(200);
         load.setVisibility(View.VISIBLE);
 
+        //dichiarazione delle liste ausiliarie
         rects = new Interval2D[numIcons];
         points = new com.andreamontanari.mythesis.algorithm.sweepline.Point[numIcons];
         people = new Person[numIcons];
@@ -147,6 +145,8 @@ public class FourthActivity extends Activity implements GoogleMap.OnMarkerClickL
          *Richiedo icone da inserire al Server
          *Inserisco posizioni scaricate dal server
          *****************************************/
+
+        //eseguo la query (SELECT * FROM TesiReal)
         final ParseQuery parseQuery = new ParseQuery("TesiReal");
         parseQuery.setLimit(numIcons);
         parseQuery.findInBackground(getAllObjects());
@@ -164,37 +164,37 @@ public class FourthActivity extends Activity implements GoogleMap.OnMarkerClickL
             @Override
             public void done(List list, com.parse.ParseException e) {
                 if (e == null) {
-
                     allObjects.addAll(list);
                     int skip = 0;
                     int limit = 1000;
                     if (list.size() == limit) {
                         skip = skip + limit;
                         ParseQuery query = new ParseQuery("TesiReal");
+                        query.whereEqualTo("Online", 1); //CONTROLLARE !!!!!!!!!!!!!!!!!!!!
                         query.setSkip(skip);
                         query.setLimit(limit);
                         query.findInBackground(getAllObjects());
                     }
-                    //We have a full PokeDex
                     else {
-                        //USE FULL DATA AS INTENDED
                         List<ParseObject> l = list;
                         for (ParseObject po : l) {
-                                projection = map.getProjection();
+                            //recupero la proiezione della mappa sul display fisico del display
+                            projection = map.getProjection();
 
+                            //recupero tutti gli attributi degli utenti caricati in TesiReal
                                 String id = String.valueOf(po.getInt("ID"));
                                 String name = po.getString("Nome");
                                 String surname = po.getString("Cognome");
                                 String lat = po.getString("Latitudine");
                                 String lng = po.getString("Longitudine");
                                 String accuracy = String.valueOf(po.getInt("Accuratezza"));
-                                String online = String.valueOf(po.getInt("Online"));
                                 String amici = String.valueOf(po.getInt("Amici"));
 
                                 Double lt = Double.parseDouble(lat);
                                 Double ln = Double.parseDouble(lng);
                                 int Id = Integer.parseInt(id);
 
+                            //inizializzo l'oggetto LatLng con le coordinate geografiche dell'utente trovato
                                 latlng = new LatLng(lt, ln);
 
 
@@ -210,6 +210,7 @@ public class FourthActivity extends Activity implements GoogleMap.OnMarkerClickL
                                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.notfriends))); //non amico
                                 }
 
+                            //recupero le coordinate spaziali relative al display del punto sulla mappa
                                 screenPosition = projection.toScreenLocation(latlng);
 
                                 int xmin = screenPosition.x;
@@ -217,9 +218,9 @@ public class FourthActivity extends Activity implements GoogleMap.OnMarkerClickL
                                 int xmax = xmin - 120;
                                 int ymax = ymin - 120;
 
+                            //inizializzo gli array ausiliari per i due algoritmi
                                 lats[Id] = lt;
                                 longs[Id] = ln;
-
                                 points[Id] = new com.andreamontanari.mythesis.algorithm.sweepline.Point(xmax, ymax, id);
                                 rects[Id] = new Interval2D(new Interval1D(xmax, xmin), new Interval1D(ymax, ymin), points[Id]);
                                 people[Id] = new Person(id, name, surname, lat, lng, amici, accuracy);
@@ -258,15 +259,13 @@ public class FourthActivity extends Activity implements GoogleMap.OnMarkerClickL
                             map.setOnMarkerClickListener(FourthActivity.this);
                             if (ex.show) {
                                 count++;
-                                //inserisco me stesso (meme)
                                 LatLng coords = new LatLng(Double.parseDouble(people[Integer.parseInt(ex.id)].lat), Double.parseDouble(people[Integer.parseInt(ex.id)].lng));
-                                if (!ex.aggregator) {
+                                if (!ex.aggregator) { // se ex non è un aggregatore
                                     map.addMarker(new MarkerOptions()
                                             .position(coords)
                                             .title(people[Integer.parseInt(ex.id)].getCompleteName())
                                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.friends)));    //singolo
-                                } else {
-                                    //inserisco l'aggregatore (quadrifoglio per ora)
+                                } else { //se ex è un aggregatore
                                     map.addMarker(new MarkerOptions()
                                             .position(coords)
                                             .title("Group:"+ex.id)
@@ -280,7 +279,7 @@ public class FourthActivity extends Activity implements GoogleMap.OnMarkerClickL
                         final Marker Marker = map.addMarker(new MarkerOptions()
                                 .position(pos)
                                 .title("My Position"));
-                        load.setVisibility(View.INVISIBLE);
+                        load.setVisibility(View.INVISIBLE);//nascondo la finestra di caricamento
                         Toast.makeText(FourthActivity.this, count+" users displayed out of "+ 300 +" online",Toast.LENGTH_LONG).show();
                     }
                 }
@@ -333,7 +332,7 @@ public class FourthActivity extends Activity implements GoogleMap.OnMarkerClickL
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
 
-
+    //funzione del MarkerListener che prende i membri del gruppo per visualizzarli in una nuova activity (ShowingFirstActivity)
     @Override
     public boolean onMarkerClick(Marker marker) {
 

@@ -7,6 +7,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.RelativeLayout;
 
+//classe custom per la finestra di caricamento
 public class LoadingView extends RelativeLayout {
 
     public LoadingView(Context context) {
@@ -24,6 +25,7 @@ public class LoadingView extends RelativeLayout {
         init();
     }
 
+    //carica il contenuto statico della pagina contenuto in res/layout/loadin.xml
     private void init() {
         inflate(getContext(), R.layout.loading, this);
     }

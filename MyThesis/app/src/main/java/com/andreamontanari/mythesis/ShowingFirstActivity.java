@@ -10,6 +10,8 @@ import java.util.ArrayList;
 /**
  * Created by andreamontanari on 17/02/15.
  */
+
+//finestra per la visualizzazione dei componenti del gruppo (caso realistico)
 public class ShowingFirstActivity extends ActionBarActivity{
 
     @Override

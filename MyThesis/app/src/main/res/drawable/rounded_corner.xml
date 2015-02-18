@@ -5,18 +5,19 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <!-- view background color -->
+    <!-- colore di sfondo -->
+
     <solid
         android:color="#CFFFFFFF" >
     </solid>
 
-    <!-- view border color and width -->
+    <!-- colore di bordo e larghezza (spessore) -->
     <stroke
         android:width="3dp"
         android:color="#CFFFFFFF" >
     </stroke>
 
-    <!-- If you want to add some padding -->
+    <!-- padding -->
     <padding
         android:left="4dp"
         android:top="4dp"
@@ -24,7 +25,8 @@
         android:bottom="4dp"    >
     </padding>
 
-    <!-- Here is the corner radius -->
+    <!-- angolo di curvatura (corner radius) -->
+
     <corners
         android:radius="15dp"   >
     </corners>

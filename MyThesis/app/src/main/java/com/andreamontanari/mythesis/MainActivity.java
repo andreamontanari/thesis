@@ -14,7 +14,7 @@ import com.parse.ParseObject;
 
 import java.util.Random;
 
-
+//prima schermata dell'applicazione, contiene alcune procedure commentate per l'inizializzazione casuale del DB di Parse.com
 public class MainActivity extends ActionBarActivity {
 
     String[] la,ln;
@@ -110,6 +110,8 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    //alla pressione sull'immagine android o sulla scritta, passa l'esecuzione alla schermata Choose per la scelta della
+    //demo da avviare
     public void begin(View view) {
         Intent i = new Intent(this, ChooseActivity.class);
         startActivity(i);
@@ -117,9 +119,7 @@ public class MainActivity extends ActionBarActivity {
 
     public void getRandomPoints() {
 
-
         int num = 100;
-
         String lats, lngs;
         la = new String[num];
         ln = new String[num];
@@ -135,6 +135,7 @@ public class MainActivity extends ActionBarActivity {
         String circ = params[2];
     }
 
+    //ritorna un nome a caso dalla lista names
     public String randomName() {
 
         int x = (int) (names.length * Math.random());
@@ -144,7 +145,7 @@ public class MainActivity extends ActionBarActivity {
             return names[x];
         }
     }
-
+    //ritorna un cognome a caso dalla lista surnames
     public String randomSurname() {
 
         int x = (int) (surnames.length * Math.random());
@@ -155,6 +156,7 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+    //ritorna un valore booleano per la relazione di amicizia
     public int randomAmici() {
         Random random = new Random();
         boolean b = random.nextBoolean();
@@ -165,6 +167,7 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+    //ritorna un numero compreso tra 0 e 100 per stabilire casualmente la rilevanza
     public int randomNumber() {
         int x = (int) (100 * Math.random());
         return x;
