@@ -14,5 +14,8 @@
     <string name="weberr1">No application can handle this request,</string>
     <string name="weberr2"> Please install a web browser</string>
     <string name="info">Information window</string>
+    <string name="infoFirst">The thesis was produced by</string>
+    <string name="infoSecond">At the University of Udine</string>
+    <string name="infoThree">In collaboration with Askii &amp; Keople Team</string>
 
 </resources>

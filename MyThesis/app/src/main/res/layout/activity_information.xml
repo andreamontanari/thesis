@@ -3,13 +3,61 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/infoFirst"
+        android:id="@+id/textView4"
+        android:layout_marginTop="21dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@+id/textView5"
+        android:layout_alignEnd="@+id/textView5" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/me"
+        android:src="@drawable/andrea"
+        android:layout_marginTop="26dp"
+        android:layout_below="@+id/textView4"
+        android:layout_alignLeft="@+id/uniud"
+        android:layout_alignStart="@+id/uniud"
+        android:onClick="visitMe"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Text"
-        android:id="@+id/textView4"
-        android:layout_alignParentTop="true"
+        android:text="@string/infoSecond"
+        android:id="@+id/textView5"
+        android:layout_below="@+id/me"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="72dp" />
+        android:layout_marginTop="40dp" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/uniud"
+        android:src="@drawable/uniud"
+        android:layout_below="@+id/me"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="85dp"
+        android:onClick="visitUniud"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/infoThree"
+        android:id="@+id/textView6"
+        android:layout_marginTop="36dp"
+        android:layout_below="@+id/uniud"
+        android:layout_centerHorizontal="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/askii"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="71dp"
+        android:onClick="visitProducer"/>
 </RelativeLayout>
