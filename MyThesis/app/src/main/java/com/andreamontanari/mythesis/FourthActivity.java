@@ -45,7 +45,7 @@ import java.util.List;
  */
 public class FourthActivity extends Activity implements GoogleMap.OnMarkerClickListener {
 
-    public final int numIcons = 500;
+    public final int numIcons = 300;
 
     LatLng latlng;
     private GoogleMap map;
@@ -148,6 +148,7 @@ public class FourthActivity extends Activity implements GoogleMap.OnMarkerClickL
 
         //eseguo la query (SELECT * FROM TesiReal)
         final ParseQuery parseQuery = new ParseQuery("TesiReal");
+        parseQuery.whereEqualTo("Online", "1");
         parseQuery.setLimit(numIcons);
         parseQuery.findInBackground(getAllObjects());
 
@@ -170,7 +171,7 @@ public class FourthActivity extends Activity implements GoogleMap.OnMarkerClickL
                     if (list.size() == limit) {
                         skip = skip + limit;
                         ParseQuery query = new ParseQuery("TesiReal");
-                        query.whereEqualTo("Online", 1); //CONTROLLARE !!!!!!!!!!!!!!!!!!!!
+                        query.whereEqualTo("Online", "1"); //CONTROLLARE !!!!!!!!!!!!!!!!!!!!
                         query.setSkip(skip);
                         query.setLimit(limit);
                         query.findInBackground(getAllObjects());
